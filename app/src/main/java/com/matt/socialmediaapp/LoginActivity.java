@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        
+
 //        In the onCreate() method, initialize the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
 
@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 //get and show proper error message
                 progressDialog.dismiss();
-                Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
                 //dismiss progress dialog
                 progressDialog.dismiss();
                 //error, get and show error message
-                Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -253,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -268,29 +268,32 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            //if user is signing in first time then get and show user info from google account
+                            if (task.getResult().getAdditionalUserInfo().isNewUser()) {
                             //get user email and uid from auth
-                            String email = user.getEmail();
-                            String uid = user.getUid();
+                                String email = user.getEmail();
+                                String uid = user.getUid();
                             /*
                             When user is registered store user info in firebase realtime database too
                             using HashMap
                              */
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            //put info to hashMap
-                            hashMap.put("email", email);
-                            hashMap.put("uid", uid);
-                            hashMap.put("name", "");        //add later
-                            hashMap.put("phone", "");        //add later
-                            hashMap.put("image", "");        //add later
-                            //firebase database instance
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            //path to store user data named "Users"
-                            DatabaseReference reference = database.getReference("Users");
-                            //put data within hashMap in database
-                            reference.child(uid).setValue(hashMap);
+                                HashMap<Object, String> hashMap = new HashMap<>();
+                                //put info to hashMap
+                                hashMap.put("email", email);
+                                hashMap.put("uid", uid);
+                                hashMap.put("name", "");        //add later
+                                hashMap.put("phone", "");        //add later
+                                hashMap.put("image", "");        //add later
+                                //firebase database instance
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                //path to store user data named "Users"
+                                DatabaseReference reference = database.getReference("Users");
+                                //put data within hashMap in database
+                                reference.child(uid).setValue(hashMap);
+                            }
 
                             //show user email in toast
-                            Toast.makeText(LoginActivity.this, ""+user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "" + user.getEmail(), Toast.LENGTH_SHORT).show();
                             //go to profile activity after logged in
                             startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();
@@ -305,7 +308,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 //get and show error message
-                Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
