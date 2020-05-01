@@ -65,6 +65,13 @@
         android:layout_below="@+id/loginBtn"
         android:textColor="@color/colorBlack"/>
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/googleLoginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/recoverPassTv" />
+
     <TextView
         android:id="@+id/nothave_accountTv"
         android:layout_width="match_parent"
