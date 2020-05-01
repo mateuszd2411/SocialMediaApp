@@ -57,14 +57,24 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/recoverPassTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Forgot Password? Recovery"
+        android:layout_below="@+id/loginBtn"
+        android:textColor="@color/colorBlack"/>
+
+    <TextView
         android:id="@+id/nothave_accountTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No have account? Register"
         android:textAlignment="center"
-        android:layout_below="@+id/loginBtn"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
-        android:textColor="@color/colorBlack" />
+        android:textColor="@color/colorBlack"
+        android:layout_marginBottom="20dp"/>
 
 
 </RelativeLayout>
