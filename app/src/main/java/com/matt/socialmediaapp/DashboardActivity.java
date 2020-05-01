@@ -13,18 +13,17 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class ProfileActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
     //Firebase auth
     FirebaseAuth firebaseAuth;
 
     //views
-    TextView mProfileTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_dashboard);
 
         //Actionbar and its title
         ActionBar actionBar = getSupportActionBar();
@@ -34,7 +33,6 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         //init views
-        mProfileTv = findViewById(R.id.profileTv);
 
     }
 
@@ -44,10 +42,9 @@ public class ProfileActivity extends AppCompatActivity {
         if (user != null) {
             //user is signed in stay here
             //set email of logged in user
-            mProfileTv.setText(user.getEmail());
         } else {
             //user not signed in, go to MainActivity
-            startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+            startActivity(new Intent(DashboardActivity.this, MainActivity.class));
             finish();
         }
     }
