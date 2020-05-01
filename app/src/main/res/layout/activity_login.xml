@@ -30,14 +30,6 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Register"
-        android:textColor="@color/colorBlack"
-        android:textSize="25sp"/>
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTIL"
         android:layout_width="match_parent"
