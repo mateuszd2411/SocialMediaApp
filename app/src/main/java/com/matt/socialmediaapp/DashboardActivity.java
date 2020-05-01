@@ -3,6 +3,7 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,13 @@ public class DashboardActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(selectedListener);
 
+        //home fragment transaction (default on start)
+        actionBar.setTitle("Home");
+        HomeFragment fragment1 = new HomeFragment();
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+        ft1.replace(R.id.content, fragment1, "");
+        ft1.commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
@@ -49,12 +57,27 @@ public class DashboardActivity extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                         case R.id.nav_home:
                             //home fragment transaction
+                            actionBar.setTitle("Home");
+                            HomeFragment fragment1 = new HomeFragment();
+                            FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+                            ft1.replace(R.id.content, fragment1, "");
+                            ft1.commit();
                             return true;
                         case R.id.nav_profile:
                             //profile fragment transaction
+                            actionBar.setTitle("Profile");
+                            ProfileFragment fragment2 = new ProfileFragment();
+                            FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                            ft2.replace(R.id.content, fragment2, "");
+                            ft2.commit();
                             return true;
                         case R.id.nav_users:
                             //users fragment transaction
+                            actionBar.setTitle("Users");
+                            UsersFragment fragment3 = new UsersFragment();
+                            FragmentTransaction ft3 = getSupportFragmentManager().beginTransaction();
+                            ft3.replace(R.id.content, fragment3, "");
+                            ft3.commit();
                             return true;
                     }
 
