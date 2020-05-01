@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -17,6 +18,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     //Firebase auth
     FirebaseAuth firebaseAuth;
+
+    ActionBar actionBar;
 
     //views
 
@@ -26,15 +29,38 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         //Actionbar and its title
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
 
         //init
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //init views
+        //bottom navigation
+        BottomNavigationView navigationView = findViewById(R.id.navigation);
+        navigationView.setOnNavigationItemSelectedListener(selectedListener);
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    //handle item click
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_home:
+                            //home fragment transaction
+                            return true;
+                        case R.id.nav_profile:
+                            //profile fragment transaction
+                            return true;
+                        case R.id.nav_users:
+                            //users fragment transaction
+                            return true;
+                    }
+
+                    return false;
+                }
+            };
 
     private void checkUserStatus() {
         //get current user
