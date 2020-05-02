@@ -4,8 +4,11 @@ package com.matt.socialmediaapp;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -55,11 +61,14 @@ public class ProfileFragment extends Fragment {
     //permissions constants
     private static final int CAMERA_REQUEST_CODE = 100;
     private static final int STORAGE_REQUEST_CODE = 200;
-    private static final int IMAGE_PICK_GALLERY_REQUEST_CODE = 300;
-    private static final int IMAGE_PICK_CAMERA_REQUEST_CODE = 400;
+    private static final int IMAGE_PICK_GALLERY_CODE = 300;
+    private static final int IMAGE_PICK_CAMERA_CODE = 400;
     //arrays of permissions to be request
     String cameraPermissions[];
     String storagePermissions[];
+
+    //uri of picked image
+    Uri image_uri;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -182,7 +191,6 @@ public class ProfileFragment extends Fragment {
         ActivityCompat.requestPermissions(getActivity(), cameraPermissions, CAMERA_REQUEST_CODE);
     }
 
-
     private void showEditProfileDialog() {
         /*
         Show dialing containing options with
@@ -239,9 +247,19 @@ public class ProfileFragment extends Fragment {
                 if (which == 0) {
                     //Camera clicked
 
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission();
+                    } else {
+                        pickFromCamera();
+                    }
                 } else if (which == 1) {
                     //Gallery clicked
 
+                    if (!checkStoragePermission()) {
+                        requestStoragePermission();
+                    } else {
+                        pickFromGallery();
+                    }
                 }
             }
         });
@@ -264,6 +282,7 @@ public class ProfileFragment extends Fragment {
                     boolean writeStorageActepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (cameraActepted && writeStorageActepted) {
                         //permissions enabled
+                        pickFromCamera();
                     } else {
                         //permissions denied
                         Toast.makeText(getActivity(), "Please enable camera & storage permissions", Toast.LENGTH_SHORT).show();
@@ -271,11 +290,70 @@ public class ProfileFragment extends Fragment {
                 }
             }
             case STORAGE_REQUEST_CODE:{
-
+                //picking from gallery, first check if storage permissions allowed or not
+                if (grantResults.length > 0) {
+                    boolean writeStorageActepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (writeStorageActepted) {
+                        //permissions enabled
+                        pickFromGallery();
+                    } else {
+                        //permissions denied
+                        Toast.makeText(getActivity(), "Please enable storage permission", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //This method will be called after picking image from Ca,era or Gallery
+
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
+                //image is picked from gallery, get uri of image
+                image_uri = data.getData();
+
+                uploadProfileCoverPhoto(image_uri);
+            }
+            if (requestCode == IMAGE_PICK_CAMERA_CODE) {
+                //image is picked from camera, get uri of image
+                uploadProfileCoverPhoto(image_uri);
+            }
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadProfileCoverPhoto(Uri image_uri) {
+
+    }
+
+    private void pickFromCamera() {
+        //Intent of picking image form device camera
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Temp Pic");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Temp Description");
+        //put image uri
+        image_uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        //intent to start camera
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
+    }
+
+    private void pickFromGallery() {
+        //pick from gallery
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent, IMAGE_PICK_GALLERY_CODE);
+
     }
 }
