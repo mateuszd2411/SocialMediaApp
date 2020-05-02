@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -50,6 +57,10 @@ public class ProfileFragment extends Fragment {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     FloatingActionButton fab;
+    //storage
+    StorageReference storageReference;
+    //path where images of user profile and cover will be stored
+    String storagePath = "Users_Profile_Cover_Imgs/";
 
     //views
     ImageView avatarIv, coverIv;
@@ -69,6 +80,9 @@ public class ProfileFragment extends Fragment {
 
     //uri of picked image
     Uri image_uri;
+
+    //for checking profile or cover photo
+    String profileOrCoverPhoto;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -214,10 +228,12 @@ public class ProfileFragment extends Fragment {
                 if (which == 0) {
                     //Edit Profile clicked
                     progressDialog.setMessage("Updating Profile Picture");
+                    profileOrCoverPhoto = "image";
                     showImagePicDialog();
                 } else if (which == 1) {
                     //Edit Cover Photo clicked
                     progressDialog.setMessage("Updating Cover Photo");
+                    profileOrCoverPhoto = "cover";
                 } else if (which == 2) {
                     //Edit Name clicked
                     progressDialog.setMessage("Updating Name");
@@ -308,7 +324,6 @@ public class ProfileFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //This method will be called after picking image from Ca,era or Gallery
@@ -331,7 +346,69 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void uploadProfileCoverPhoto(Uri image_uri) {
+    private void uploadProfileCoverPhoto(Uri uri) {
+        //show progress bar
+        progressDialog.show();
+
+        /*
+        Instead of creating separate function for Profile Picture and Cover Photo (for both in same function)
+         */
+
+        //path and name of image to be stored in firebase storage
+        String filePathAndName = storagePath + "" + profileOrCoverPhoto + "_" + user.getUid();
+
+        StorageReference storageReference2nd = storageReference.child(filePathAndName);
+        storageReference2nd.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //image is uploaded to storage, now get it's url and store in user's database
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful());
+                Uri downloadUri = uriTask.getResult();
+
+                //check if image is uploaded or not and url is received
+                if (uriTask.isSuccessful()) {
+                    //image uploaded
+                    HashMap<String, Object> result = new HashMap<>();
+                    /*
+                    First Parameter is profileOrCoverPhoto that has value "image" or "cover"
+                    which are keys in user's database where url of image will be saved in one of them
+
+                    Second Parameter contains the url of the image stored in firebase storage, this url
+                    will be saved as value against key "image" or "cover"
+                     */
+                    result.put(profileOrCoverPhoto, downloadUri.toString());
+
+                    databaseReference.child(user.getUid()).updateChildren(result)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //url in database of user is added successfully
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getActivity(), "Image Updated...", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), "Error Updating Image...", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //there were some error
+                progressDialog.dismiss();
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
