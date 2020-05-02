@@ -1,12 +1,16 @@
 package com.matt.socialmediaapp;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +52,15 @@ public class ProfileFragment extends Fragment {
     //progress dialog
     ProgressDialog progressDialog;
 
+    //permissions constants
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+    private static final int IMAGE_PICK_GALLERY_REQUEST_CODE = 300;
+    private static final int IMAGE_PICK_CAMERA_REQUEST_CODE = 400;
+    //arrays of permissions to be request
+    String cameraPermissions[];
+    String storagePermissions[];
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -63,6 +77,10 @@ public class ProfileFragment extends Fragment {
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+
+        //init arrays of permissions
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         //init views
         avatarIv = view.findViewById(R.id.avatarIv);
@@ -93,6 +111,7 @@ public class ProfileFragment extends Fragment {
                     String email = "" + ds.child("email").getValue();
                     String phone = "" + ds.child("phone").getValue();
                     String image = "" + ds.child("image").getValue();
+                    String cover = "" + ds.child("cover").getValue();
 
                     //set data to fragment_profile.xml
                     nameTv.setText(name);
@@ -104,6 +123,13 @@ public class ProfileFragment extends Fragment {
                     } catch (Exception e) {
                         //if there is any exception while getting image then set default
                         Picasso.get().load(R.drawable.ic_add_image).into(avatarIv);
+                    }
+
+                    try {
+                        //if image is received then set
+                        Picasso.get().load(cover).into(coverIv);
+                    } catch (Exception e) {
+                        //if there is any exception while getting image then set default
                     }
                 }
 
@@ -124,9 +150,38 @@ public class ProfileFragment extends Fragment {
         });
 
         return view;
-
-
     }
+
+    private boolean checkStoragePermission() {
+        //check if storage permission is enabled or not
+        //return true if enable
+        // return false if not enable
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+    private void requestStoragePermission() {
+        //request runtime storage permission
+        ActivityCompat.requestPermissions(getActivity(), storagePermissions, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkCameraPermission() {
+        //check if storage permission is enabled or not
+        //return true if enable
+        // return false if not enable
+
+        boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                == (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+    private void requestCameraPermission() {
+        //request runtime storage permission
+        ActivityCompat.requestPermissions(getActivity(), cameraPermissions, CAMERA_REQUEST_CODE);
+    }
+
 
     private void showEditProfileDialog() {
         /*
@@ -150,13 +205,18 @@ public class ProfileFragment extends Fragment {
                 //handle dialog item click
                 if (which == 0) {
                     //Edit Profile clicked
+                    progressDialog.setMessage("Updating Profile Picture");
+                    showImagePicDialog();
                 } else if (which == 1) {
                     //Edit Cover Photo clicked
+                    progressDialog.setMessage("Updating Cover Photo");
                 } else if (which == 2) {
                     //Edit Name clicked
+                    progressDialog.setMessage("Updating Name");
                 }
                 else if (which == 3) {
                     //Edit Phone clicked
+                    progressDialog.setMessage("Updating Phone");
                 }
             }
         });
@@ -164,4 +224,58 @@ public class ProfileFragment extends Fragment {
         builder.create().show();
     }
 
+    private void showImagePicDialog() {
+        //show dialog containing options Camera and Gallery to pick the image
+        String options[] = {"Camera", "Gallery"};
+        //alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //set title
+        builder.setTitle("Pick Image From");
+        //set items to dialog
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                //handle dialog item click
+                if (which == 0) {
+                    //Camera clicked
+
+                } else if (which == 1) {
+                    //Gallery clicked
+
+                }
+            }
+        });
+        //create and show dialog
+        builder.create().show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        /*
+        This method called when user press Allow or Deny from permission request dialog
+        here we will handle permission cases (allowed and denied)
+         */
+
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE:{
+                //picking from camera, first check if camera and storage permissions allowed or not
+                if (grantResults.length > 0) {
+                    boolean cameraActepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageActepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraActepted && writeStorageActepted) {
+                        //permissions enabled
+                    } else {
+                        //permissions denied
+                        Toast.makeText(getActivity(), "Please enable camera & storage permissions", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            case STORAGE_REQUEST_CODE:{
+
+            }
+
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
