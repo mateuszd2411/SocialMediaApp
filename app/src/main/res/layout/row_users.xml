@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatarIv"
             android:src="@drawable/ic_default_img"
             android:layout_width="70dp"
