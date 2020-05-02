@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.matt.socialmediaapp.models.ModelUser;
+import com.matt.socialmediaapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

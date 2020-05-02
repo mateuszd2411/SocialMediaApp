@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.models;
 
 public class ModelUser {
 
