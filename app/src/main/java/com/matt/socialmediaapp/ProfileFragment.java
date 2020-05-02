@@ -17,10 +17,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
+import static com.google.firebase.storage.FirebaseStorage.getInstance;
 
 
 /**
@@ -100,6 +104,8 @@ public class ProfileFragment extends Fragment {
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
+        storageReference = getInstance().getReference();        //firebase storage reference
+
 
         //init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -185,7 +191,7 @@ public class ProfileFragment extends Fragment {
     }
     private void requestStoragePermission() {
         //request runtime storage permission
-        ActivityCompat.requestPermissions(getActivity(), storagePermissions, STORAGE_REQUEST_CODE);
+        requestPermissions(storagePermissions, STORAGE_REQUEST_CODE);
     }
 
     private boolean checkCameraPermission() {
@@ -202,7 +208,7 @@ public class ProfileFragment extends Fragment {
     }
     private void requestCameraPermission() {
         //request runtime storage permission
-        ActivityCompat.requestPermissions(getActivity(), cameraPermissions, CAMERA_REQUEST_CODE);
+        requestPermissions(cameraPermissions, CAMERA_REQUEST_CODE);
     }
 
     private void showEditProfileDialog() {
@@ -230,18 +236,83 @@ public class ProfileFragment extends Fragment {
                     progressDialog.setMessage("Updating Profile Picture");
                     profileOrCoverPhoto = "image";
                     showImagePicDialog();
-                } else if (which == 1) {
+                }
+                if (which == 1) {
                     //Edit Cover Photo clicked
                     progressDialog.setMessage("Updating Cover Photo");
                     profileOrCoverPhoto = "cover";
-                } else if (which == 2) {
+                }
+                if (which == 2) {
                     //Edit Name clicked
+                    //calling method and pass key "name" as parameter to update it's value in database
+                    showNamePhoneUpdateDialog("name");
                     progressDialog.setMessage("Updating Name");
                 }
-                else if (which == 3) {
+                if (which == 3) {
                     //Edit Phone clicked
                     progressDialog.setMessage("Updating Phone");
+                    showNamePhoneUpdateDialog("phone");
                 }
+            }
+        });
+        //create and show dialog
+        builder.create().show();
+    }
+
+    private void showNamePhoneUpdateDialog(final String key) {
+        // "key" parameter is for name and phone
+
+        //custom dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Update " + key);      // name or phone
+        //set layout of dialog
+        LinearLayout linearLayout = new LinearLayout(getActivity());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setPadding(10, 10, 10, 10);
+        //add edit text
+        final EditText editText = new EditText(getActivity());
+        editText.setHint("Enter " + key);       // name or phone
+        linearLayout.addView(editText);
+
+        builder.setView(linearLayout);
+
+        //add buttons in dialog to update
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //input text from edit text
+                String value = editText.getText().toString().trim();
+                //validate if user has entered something or not
+                if (!TextUtils.isEmpty(value)) {
+                    progressDialog.show();
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put(key, value);
+
+                    databaseReference.child(user.getUid()).updateChildren(result)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getActivity(), "Updated...", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(getActivity(), "Please enter " + key, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //add buttons in dialog to cancel
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                progressDialog.dismiss();
             }
         });
         //create and show dialog
@@ -305,11 +376,12 @@ public class ProfileFragment extends Fragment {
                     }
                 }
             }
+            break;
             case STORAGE_REQUEST_CODE:{
                 //picking from gallery, first check if storage permissions allowed or not
                 if (grantResults.length > 0) {
-                    boolean writeStorageActepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (writeStorageActepted) {
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (writeStorageAccepted) {
                         //permissions enabled
                         pickFromGallery();
                     } else {
@@ -318,10 +390,8 @@ public class ProfileFragment extends Fragment {
                     }
                 }
             }
-
+            break;
         }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
