@@ -7,7 +7,6 @@
     tools:context=".ProfileFragment">
 
     <ScrollView
-        android:id="@+id/coverIv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,10 +15,14 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/coverIv"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="180dp"
+                android:scaleType="fitXY"
+                android:background="@color/colorPrimaryDark">
 
-            </ImageView>
+
+        </ImageView>
 
             <RelativeLayout
                 android:layout_width="match_parent"

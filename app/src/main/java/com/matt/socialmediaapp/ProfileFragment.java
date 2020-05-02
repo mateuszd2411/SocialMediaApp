@@ -1,6 +1,9 @@
 package com.matt.socialmediaapp;
 
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,10 +38,14 @@ public class ProfileFragment extends Fragment {
     FirebaseUser user;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    FloatingActionButton fab;
 
     //views
-    ImageView avatarIv;
+    ImageView avatarIv, coverIv;
     TextView nameTv, emailTv, phoneTv;
+
+    //progress dialog
+    ProgressDialog progressDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -58,9 +66,14 @@ public class ProfileFragment extends Fragment {
 
         //init views
         avatarIv = view.findViewById(R.id.avatarIv);
+        coverIv = view.findViewById(R.id.coverIv);
         nameTv = view.findViewById(R.id.nameTv);
         emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
+        fab = view.findViewById(R.id.fab);
+
+        //init progress dialog
+        progressDialog = new ProgressDialog(getActivity());
 
         /*We have to get info of currently signed in user. We can get it using user's email or uid
         I'm gonna retrieve user detail using email
@@ -102,10 +115,53 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        //fab button click
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditProfileDialog();
+            }
+        });
 
         return view;
 
 
+    }
+
+    private void showEditProfileDialog() {
+        /*
+        Show dialing containing options with
+        1) Edit Profile Picture
+        2) Edit Cover Photo
+        3) Edit Name
+        4) Edit Phone
+         */
+
+        //options to show in dialog
+        String options[] = {"Edit Profile Picture", "Edit Cover Photo", "Edit Name", "Edit Phone"};
+        //alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //set title
+        builder.setTitle("Choose Action");
+        //set items to dialog
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                //handle dialog item click
+                if (which == 0) {
+                    //Edit Profile clicked
+                } else if (which == 1) {
+                    //Edit Cover Photo clicked
+                } else if (which == 2) {
+                    //Edit Name clicked
+                }
+                else if (which == 3) {
+                    //Edit Phone clicked
+                }
+            }
+        });
+        //create and show dialog
+        builder.create().show();
     }
 
 }
