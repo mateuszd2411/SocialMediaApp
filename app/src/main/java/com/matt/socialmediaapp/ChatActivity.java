@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,9 +26,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.adapters.AdapterChat;
+import com.matt.socialmediaapp.models.ModelChat;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -44,9 +48,16 @@ public class ChatActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference usersDbRef;
+    //for checking if use has seen message or not
+    ValueEventListener seenListener;
+    DatabaseReference userRefForSeen;
+
+    List<ModelChat> chatList;
+    AdapterChat adapterChat;
 
     String hisUid;
     String myUid;
+    String hisImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +74,13 @@ public class ChatActivity extends AppCompatActivity {
         userStatusTv = findViewById(R.id.userStatusTv);
         messageEt = findViewById(R.id.messageEt);
         sendBtn = findViewById(R.id.sendBtn);
+
+        //Layout (LinearLayout) for RecyclerView
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        //recyclerView properties
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         /*
         On click user from users list we have passed that user's UID using intent
@@ -87,13 +105,13 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //get data
                     String name = "" + ds.child("name").getValue();
-                    String image = "" + ds.child("image").getValue();
+                    hisImage = "" + ds.child("image").getValue();
 
                     //set data
                     nameTv.setText(name);
                     try {
                         //image received, set it to imageView in toolbar
-                        Picasso.get().load(image).placeholder(R.drawable.ic_default_img).into(profileIv);
+                        Picasso.get().load(hisImage).placeholder(R.drawable.ic_default_img).into(profileIv);
 
                     } catch (Exception e) {
                         //set default image
@@ -139,10 +157,14 @@ public class ChatActivity extends AppCompatActivity {
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", myUid);
         hashMap.put("receiver", hisUid);
         hashMap.put("message", message);
+        hashMap.put("timestamp", timeStamp);
+        hashMap.put("isSeen", false);
         databaseReference.child("Chats").push().setValue(hashMap);
 
         //reset editText after sending message
