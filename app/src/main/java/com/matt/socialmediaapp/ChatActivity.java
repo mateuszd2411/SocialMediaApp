@@ -146,6 +146,30 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         readMessages();
+
+        seenMessage();
+    }
+
+    private void seenMessage() {
+        userRefForSeen = FirebaseDatabase.getInstance().getReference("Chats");
+        seenListener = userRefForSeen.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelChat chat = ds.getValue(ModelChat.class);
+                    if (chat.getReceiver().equals(myUid) && chat.getSender().equals(hisUid)) {
+                        HashMap<String, Object> hasSeenHashMap = new HashMap<>();
+                        hasSeenHashMap.put("Seen", true);
+                        ds.getRef().updateChildren(hasSeenHashMap);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void readMessages() {
@@ -196,7 +220,7 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("receiver", hisUid);
         hashMap.put("message", message);
         hashMap.put("timestamp", timeStamp);
-        hashMap.put("isSeen", false);
+        hashMap.put("Seen", false);
         databaseReference.child("Chats").push().setValue(hashMap);
 
         //reset editText after sending message
@@ -222,6 +246,12 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         checkUserStatus();
         super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        userRefForSeen.removeEventListener(seenListener);
     }
 
     @Override

@@ -2,17 +2,17 @@ package com.matt.socialmediaapp.models;
 
 public class ModelChat {
     String message, receiver, sender, timestamp;
-    boolean isSeen;
+    boolean Seen;
 
     public ModelChat() {
     }
 
-    public ModelChat(String message, String receiver, String sender, String timestamp, boolean isSeen) {
+    public ModelChat(String message, String receiver, String sender, String timestamp, boolean seen) {
         this.message = message;
         this.receiver = receiver;
         this.sender = sender;
         this.timestamp = timestamp;
-        this.isSeen = isSeen;
+        Seen = seen;
     }
 
     public String getMessage() {
@@ -48,10 +48,10 @@ public class ModelChat {
     }
 
     public boolean isSeen() {
-        return isSeen;
+        return Seen;
     }
 
     public void setSeen(boolean seen) {
-        isSeen = seen;
+        Seen = seen;
     }
 }
