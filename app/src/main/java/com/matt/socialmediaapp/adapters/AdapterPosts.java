@@ -9,12 +9,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.models.ModelPost;
+import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.List;
@@ -56,6 +58,56 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
         String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
+
+        //set data
+        holder.uNameTv.setText(uName);
+        holder.pTimeTv.setText(pTime);
+        holder.pTitleTv.setText(pTitle);
+        holder.pDescriptionTv.setText(pDescription);
+
+        //set user dp
+        try {
+            Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
+        } catch (Exception e) {
+
+        }
+
+        //set post image
+        try {
+            Picasso.get().load(uDp).into(holder.pImageIv);
+        } catch (Exception e) {
+
+        }
+
+        //handle button click
+        holder.moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //will implement later
+                Toast.makeText(context, "Click more", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //will implement later
+                Toast.makeText(context, "Click Like", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //will implement later
+                Toast.makeText(context, "Click Comment", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //will implement later
+                Toast.makeText(context, "Click Share", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
