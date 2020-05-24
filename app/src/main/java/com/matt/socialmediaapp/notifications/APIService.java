@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp.notofications;
+package com.matt.socialmediaapp.notifications;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

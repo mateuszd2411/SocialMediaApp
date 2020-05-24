@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp.notofications;
+package com.matt.socialmediaapp.notifications;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

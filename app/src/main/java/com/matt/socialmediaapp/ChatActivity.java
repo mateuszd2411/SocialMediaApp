@@ -31,6 +31,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.matt.socialmediaapp.adapters.AdapterChat;
 import com.matt.socialmediaapp.models.ModelChat;
+import com.matt.socialmediaapp.models.ModelUser;
+import com.matt.socialmediaapp.notifications.APIService;
+import com.matt.socialmediaapp.notifications.Client;
+import com.matt.socialmediaapp.notifications.Data;
+import com.matt.socialmediaapp.notifications.Response;
+import com.matt.socialmediaapp.notifications.Sender;
+import com.matt.socialmediaapp.notifications.Token;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -38,6 +45,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -65,6 +75,9 @@ public class ChatActivity extends AppCompatActivity {
     String myUid;
     String hisImage;
 
+    APIService apiService;
+    boolean notify = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +100,9 @@ public class ChatActivity extends AppCompatActivity {
         //recyclerView properties
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         /*
         On click user from users list we have passed that user's UID using intent
@@ -156,6 +172,7 @@ public class ChatActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                notify = true;
                 //get text from edit text
                 String message = messageEt.getText().toString().trim();
                 //check if text is empty or not
@@ -166,6 +183,8 @@ public class ChatActivity extends AppCompatActivity {
                     //text not empty
                     sendMessage(message);
                 }
+                //reset editText after sending message
+                messageEt.setText("");
             }
         });
 
@@ -247,7 +266,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(final String message) {
         /*
         "Chats" node will be created that will contain all chats
         Whenever user sends message it will created new child in "Chats" node and that child will contain
@@ -269,8 +288,58 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("Seen", false);
         databaseReference.child("Chats").push().setValue(hashMap);
 
-        //reset editText after sending message
-        messageEt.setText("");
+        String msg = message;
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(myUid);
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ModelUser user = dataSnapshot.getValue(ModelUser.class);
+
+                if (notify) {
+                    sendNotification(hisUid, user.getName(), message);
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void sendNotification(final String hisUid, final String name, final String message) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(hisUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(myUid, name + ":" + message, "New Message", hisUid, R.drawable.ic_default_img);
+
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                                    Toast.makeText(ChatActivity.this, ""+response.message(), Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

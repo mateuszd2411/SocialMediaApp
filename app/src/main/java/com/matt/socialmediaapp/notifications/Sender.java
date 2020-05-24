@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp.notofications;
+package com.matt.socialmediaapp.notifications;
 
 public class Sender {
 

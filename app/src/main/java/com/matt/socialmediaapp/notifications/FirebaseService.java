@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp.notofications;
+package com.matt.socialmediaapp.notifications;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
