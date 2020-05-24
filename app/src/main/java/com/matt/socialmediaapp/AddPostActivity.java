@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -99,15 +100,33 @@ public class AddPostActivity extends AppCompatActivity {
                 //item click here
                 if (i == 0) {
                     //camera clicked
-                    //we need to check permissions first
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission();
+                    }
+                    else {
+                        pickFromCamera();
+                    }
                 }
                 if (i == 1) {
                     //gallery clicked
+                    if (!checkStoragePermission()) {
+                        requestStoragePermission();
+                    } else {
+                        pickFromGallery();
+                    }
                 }
             }
         });
         //create and show dialog
         builder.create().show();
+    }
+
+    private void pickFromGallery() {
+
+    }
+
+    private void pickFromCamera() {
+
     }
 
     private boolean checkStoragePermission() {
@@ -166,7 +185,6 @@ public class AddPostActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();    //go to previous activity
@@ -190,5 +208,47 @@ public class AddPostActivity extends AppCompatActivity {
             checkUserStatus();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //handle permission results
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //this method is called when user press Allow or Deny from permission request dialog
+        //here we will handle permission cases (allow and denied)
+
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE:{
+                if (grantResults.length > 0) {
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraAccepted && storageAccepted) {
+                        //both permission are granted
+                        pickFromCamera();
+                    } else {
+                        Toast.makeText(this, "Camera & Storage both permissions are necessary", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+
+                }
+            }
+            break;
+            case STORAGE_REQUEST_CODE:{
+                if (grantResults.length > 0) {
+                    boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (storageAccepted) {
+                        //storage permission granted
+                        pickFromGallery();
+                    } else {
+                        Toast.makeText(this, "Storage permissions is necessary", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+
+                }
+
+            }
+            break;
+
+        }
     }
 }
