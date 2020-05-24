@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +28,14 @@ public class AddPostActivity extends AppCompatActivity {
 
     ActionBar actionBar;
 
+    //permissions constants
+    private static final int CAMERA_REQUEST_CODE = 100;
+    private static final int STORAGE_REQUEST_CODE = 200;
+
+    //permissions array
+    String[] cameraPermissions;
+    String[] storagePermissions;
+
     //views
     EditText titleEt, descriptionEt;
     ImageView imageIv;
@@ -39,6 +51,10 @@ public class AddPostActivity extends AppCompatActivity {
         //enable back button in actionbar
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        //init permissions array
+        cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        cameraPermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         firebaseAuth = FirebaseAuth.getInstance();
         checkUserStatus();
@@ -92,6 +108,37 @@ public class AddPostActivity extends AppCompatActivity {
         });
         //create and show dialog
         builder.create().show();
+    }
+
+    private boolean checkStoragePermission() {
+        //check if storage permission is enable or not
+        //return if enable
+        //return false if not enable
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        return result;
+    }
+
+    private void requestStoragePermission() {
+        //request runtime storage permission
+        ActivityCompat.requestPermissions(this, storagePermissions, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkCameraPermission() {
+        //check if camera permission is enable or not
+        //return if enable
+        //return false if not enable
+        boolean result = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean result1 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+
+        return result && result1;
+    }
+
+    private void requestCameraPermission() {
+        //request runtime storage permission
+        ActivityCompat.requestPermissions(this, storagePermissions, CAMERA_REQUEST_CODE);
     }
 
     @Override
