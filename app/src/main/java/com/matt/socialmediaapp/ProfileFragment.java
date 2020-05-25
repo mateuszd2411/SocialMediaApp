@@ -53,6 +53,7 @@ import com.matt.socialmediaapp.adapters.AdapterPosts;
 import com.matt.socialmediaapp.models.ModelPost;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -194,6 +195,8 @@ public class ProfileFragment extends Fragment {
                 showEditProfileDialog();
             }
         });
+
+        postList = new ArrayList<>();
 
         checkUserStatus();
         loadMyPost();
@@ -632,7 +635,7 @@ public class ProfileFragment extends Fragment {
         inflater.inflate(R.menu.menu_main, menu);
 
         MenuItem item = menu.findItem(R.id.action_search);
-        //v6 searchView to search user specific posts
+        //v7 searchView to search user specific posts
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
