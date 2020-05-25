@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -48,10 +49,17 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
 
     String myUid;
 
+    private DatabaseReference likesRef;     //for likes database node
+    private DatabaseReference postsRef;     //reference of posts
+
+    boolean mProcessLike = false;
+
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+        postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
     }
 
     @NonNull
@@ -64,7 +72,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
         //get data
         final String uid = postList.get(position).getUid();
         String uEmail = postList.get(position).getuEmail();
@@ -75,6 +83,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         String pDescription = postList.get(position).getpDescr();
         final String pImage = postList.get(position).getpImage();
         String pTimeStamp = postList.get(position).getpTime();
+        String pLikes = postList.get(position).getpLikes(); //constrains total number of likes for a post
 
         //convert timestamp to dd/mm/yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -86,6 +95,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         holder.pTimeTv.setText(pTime);
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
+        holder.pLikesTv.setText(pLikes + " Likes");     //e.g 100 Likes
+        //set likes for each post
+        setLikes(holder, pId);
 
         //set user dp
         try {
@@ -121,8 +133,36 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //will implement later
-                Toast.makeText(context, "Click Like", Toast.LENGTH_SHORT).show();
+                //get total number of likes for the post, whose like button clicked
+                //if currently signed in user has not liked it before
+                //increase value by 1, otherwise decrease value by 1
+                final int pLikes = Integer.parseInt(postList.get(position).getpLikes());
+                mProcessLike = true;
+                //get id of the post clicked
+                final String postId = postList.get(position).getpId();
+                likesRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (mProcessLike) {
+                            if (dataSnapshot.child(postId).hasChild(myUid)) {
+                                //already liked, so remove like
+                                postsRef.child(postId).child("pLikes").setValue("" + (pLikes - 1));
+                                likesRef.child(postId).child(myUid).removeValue();
+                                mProcessLike = false;
+                            } else {
+                                //not liked, like it
+                                postsRef.child(postId).child("pLikes").setValue("" + (pLikes + 1));
+                                likesRef.child(postId).child(myUid).setValue("Liked");
+                                mProcessLike = false;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +188,34 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
                 Intent intent = new Intent(context, ThereProfileActivity.class);
                 intent.putExtra("uid", uid);
                 context.startActivity(intent);
+            }
+        });
+    }
+
+    private void setLikes(final MyHolder holder, final String postKey) {
+        likesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(postKey).hasChild(myUid)) {
+                    //user has liked this post
+                    /*To indicate that the post is liked by this(SignedIn) user
+                    Change drawable left icon of like button
+                    Change text of like button from "Like" to "Liked"*/
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+                    holder.likeBtn.setText("Liked");
+                } else {
+                    //user has not liked this post
+                    /*To indicate that the post is liked by this(SignedIn) user
+                    Change drawable left icon of like button
+                    Change text of like button from "Liked" to "Like"*/
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0, 0, 0);
+                    holder.likeBtn.setText("Like");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
