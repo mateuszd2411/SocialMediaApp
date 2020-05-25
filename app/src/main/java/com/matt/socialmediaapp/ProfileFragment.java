@@ -15,7 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -28,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +49,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.matt.socialmediaapp.adapters.AdapterPosts;
+import com.matt.socialmediaapp.models.ModelPost;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.firebase.storage.FirebaseStorage.getInstance;
@@ -73,6 +80,7 @@ public class ProfileFragment extends Fragment {
     //views
     ImageView avatarIv, coverIv;
     TextView nameTv, emailTv, phoneTv;
+    RecyclerView postsRecyclerView;
 
     //progress dialog
     ProgressDialog progressDialog;
@@ -85,6 +93,10 @@ public class ProfileFragment extends Fragment {
     //arrays of permissions to be request
     String cameraPermissions[];
     String storagePermissions[];
+
+    List<ModelPost> postList;
+    AdapterPosts adapterPosts;
+    String uid;
 
     //uri of picked image
     Uri image_uri;
@@ -122,6 +134,7 @@ public class ProfileFragment extends Fragment {
         emailTv = view.findViewById(R.id.emailTv);
         phoneTv = view.findViewById(R.id.phoneTv);
         fab = view.findViewById(R.id.fab);
+        postsRecyclerView = view.findViewById(R.id.recyclerview_posts);
 
         //init progress dialog
         progressDialog = new ProgressDialog(getActivity());
@@ -182,7 +195,87 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        checkUserStatus();
+        loadMyPost();
+
         return view;
+    }
+
+    private void loadMyPost() {
+        //linear layout for recyclerview
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        //show newest post first, for this load from last
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        //set this layout to recyclerView
+        postsRecyclerView.setLayoutManager(layoutManager);
+
+        //init posts list
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //query to load posts
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        //get all data from this ref
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelPost myPosts = ds.getValue(ModelPost.class);
+
+                    //add to list
+                    postList.add(myPosts);
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
+                    //set this adapter to recyclerView
+                    postsRecyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void searchMyPost(final String searchQuery) {
+        //linear layout for recyclerview
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        //show newest post first, for this load from last
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        //set this layout to recyclerView
+        postsRecyclerView.setLayoutManager(layoutManager);
+
+        //init posts list
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //query to load posts
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        //get all data from this ref
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelPost myPosts = ds.getValue(ModelPost.class);
+
+                    if (myPosts.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            myPosts.getpDescr().toLowerCase().contains(searchQuery.toLowerCase())) {
+                        //add to list
+                        postList.add(myPosts);
+                    }
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
+                    //set this adapter to recyclerView
+                    postsRecyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean checkStoragePermission() {
@@ -514,6 +607,7 @@ public class ProfileFragment extends Fragment {
         if (user != null) {
             //user is signed in stay here
             //set email of logged in user
+            uid = user.getUid();
         } else {
             //user not signed in, go to MainActivity
             startActivity(new Intent(getActivity(), MainActivity.class));
@@ -536,6 +630,36 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        //v6 searchView to search user specific posts
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                //called when user press search button
+                if (!TextUtils.isEmpty(s)) {
+                    //search
+                    searchMyPost(s);
+                } else {
+                    loadMyPost();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //called whenever user type any letter
+                if (!TextUtils.isEmpty(s)) {
+                    //search
+                    searchMyPost(s);
+                } else {
+                    loadMyPost();
+                }
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
