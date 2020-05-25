@@ -1,6 +1,8 @@
 package com.matt.socialmediaapp.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.matt.socialmediaapp.ChatActivity;
+import com.matt.socialmediaapp.ThereProfileActivity;
 import com.matt.socialmediaapp.models.ModelUser;
 import com.matt.socialmediaapp.R;
 import com.squareup.picasso.Picasso;
@@ -61,11 +64,30 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Click user from user list to start chatting
+                //show dialog when click to user from list
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setItems(new String[]{"Profile", "Chat"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == 0) {
+                            //profile clicked
+                            /* click to go to ThereProfileActivity with uid, this uid is of clicked user
+                            witch will be used to show user specific data/posts*/
+                            Intent intent = new Intent(context, ThereProfileActivity.class);
+                            intent.putExtra("uid", hisUID);
+                            context.startActivity(intent);
+                        }
+                        if (i == 1) {
+                            //chat clicked
+                            //Click user from user list to start chatting
+                            Intent intent = new Intent(context, ChatActivity.class);
+                            intent.putExtra("hisUid", hisUID);
+                            context.startActivity(intent);
 
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("hisUid", hisUID);
-                context.startActivity(intent);
+                        }
+                    }
+                });
+                builder.create().show();
             }
         });
     }
