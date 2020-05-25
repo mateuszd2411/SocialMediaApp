@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
@@ -31,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -381,7 +381,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //input text from edit text
-                String value = editText.getText().toString().trim();
+                final String value = editText.getText().toString().trim();
                 //validate if user has entered something or not
                 if (!TextUtils.isEmpty(value)) {
                     progressDialog.show();
@@ -402,6 +402,26 @@ public class ProfileFragment extends Fragment {
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    //if user edit kis name, also change it from his posts
+                    if (key.equals("name")) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(uid);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    String child = ds.getKey();
+                                    dataSnapshot.getRef().child(child).child("uName").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
 
                 } else {
                     Toast.makeText(getActivity(), "Please enter " + key, Toast.LENGTH_SHORT).show();
@@ -534,7 +554,7 @@ public class ProfileFragment extends Fragment {
                 //image is uploaded to storage, now get it's url and store in user's database
                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uriTask.isSuccessful());
-                Uri downloadUri = uriTask.getResult();
+                final Uri downloadUri = uriTask.getResult();
 
                 //check if image is uploaded or not and url is received
                 if (uriTask.isSuccessful()) {
@@ -564,6 +584,26 @@ public class ProfileFragment extends Fragment {
                             Toast.makeText(getActivity(), "Error Updating Image...", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    //if user edit his photo, also change it from his posts
+                    if (profileOrCoverPhoto.equals("image")) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(uid);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    String child = ds.getKey();
+                                    dataSnapshot.getRef().child(child).child("uDp").setValue(downloadUri.toString());
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
 
                 } else {
                     progressDialog.dismiss();
