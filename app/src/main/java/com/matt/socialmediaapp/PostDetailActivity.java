@@ -3,12 +3,14 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -39,8 +43,8 @@ import java.util.Locale;
 public class PostDetailActivity extends AppCompatActivity {
 
     //to get detail of user and post
-    String myUid, myEmail, myName, myDp,
-    postId, pLikes, hisDp, hisName;
+    String hisUid, myUid, myEmail, myName, myDp,
+    postId, pLikes, hisDp, hisName, pImage;
 
     boolean mProcessCount = false;
     boolean mProcessLike = false;
@@ -121,7 +125,129 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+        //more button click handle
+        moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMoreOptions();
+            }
+        });
 
+    }
+
+    private void showMoreOptions() {
+        //creating popup menu currently having option Delete, we will add more options later
+        PopupMenu popupMenu = new PopupMenu(this, moreBtn, Gravity.END);
+
+        //show delete option in only post(s) of current signed-in user
+        if (hisUid.equals(myUid)) {
+            //add items in menu
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+            popupMenu.getMenu().add(Menu.NONE, 1, 0, "Edit");
+        }
+
+        //item click listener
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == 0) {
+                    //delete is clicked
+                    beginDelete();
+                }
+                else if (id == 1) {
+                    //Edit is clicked
+                    // start AddPostActivity with key "editPost" and the id of the post clicked
+                    Intent intent = new Intent(PostDetailActivity.this, AddPostActivity.class);
+                    intent.putExtra("key", "editPost");
+                    intent.putExtra("editPostId", postId);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
+        //show menu
+        popupMenu.show();
+    }
+
+    private void beginDelete() {
+        //post can be with or without image
+
+        if (pImage.equals("noImage")) {
+            //post is without image
+            deleteWithoutImage();
+        } else {
+            //post is with image
+            deleteWithImage();
+        }
+    }
+
+    private void deleteWithImage() {
+        //progress bar
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Deleting...");
+
+        /*Steps:
+        1) Delete Image using url
+        2) Delete from database using post id*/
+
+        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(pImage);
+        picRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //image deleted, now delete database
+
+                        Query fQuery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId").equalTo(postId);
+                        fQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    ds.getRef().removeValue(); // remove values from firebase where pId matches
+                                }
+                                //deleted
+                                Toast.makeText(PostDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                                pd.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //failed, can't go further
+                pd.dismiss();
+                Toast.makeText(PostDetailActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void deleteWithoutImage() {
+        //progress bar
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Deleting...");
+
+        Query fQuery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("pId").equalTo(postId);
+        fQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ds.getRef().removeValue(); // remove values from firebase where pId matches
+                }
+                //deleted
+                Toast.makeText(PostDetailActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void setLikes() {
@@ -302,9 +428,9 @@ public class PostDetailActivity extends AppCompatActivity {
                     String pDescr = "" + ds.child("pDescr").getValue();
                     pLikes = "" + ds.child("pLikes").getValue();
                     String pTimeStamp = "" + ds.child("pTime").getValue();
-                    String pImage = "" + ds.child("pImage").getValue();
+                    pImage = "" + ds.child("pImage").getValue();
                     hisDp = "" + ds.child("uDp").getValue();
-                    String uid = "" + ds.child("uid").getValue();
+                    hisUid = "" + ds.child("uid").getValue();
                     String uEmail = "" + ds.child("uEmail").getValue();
                     hisName = "" + ds.child("uName").getValue();
                     String commentCount = "" + ds.child("pComments").getValue();
