@@ -85,6 +85,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         final String pImage = postList.get(position).getpImage();
         String pTimeStamp = postList.get(position).getpTime();
         String pLikes = postList.get(position).getpLikes(); //constrains total number of likes for a post
+        String pComments = postList.get(position).getpComments(); //constrains total number of comments for a post
 
         //convert timestamp to dd/mm/yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -97,6 +98,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         holder.pTitleTv.setText(pTitle);
         holder.pDescriptionTv.setText(pDescription);
         holder.pLikesTv.setText(pLikes + " Likes");     //e.g 100 Likes
+        holder.pComments.setText(pComments + " Comments");     //e.g 100 Comments
         //set likes for each post
         setLikes(holder, pId);
 
@@ -354,7 +356,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
 
         //views from row_post.xml
         ImageView uPictureIv, pImageIv;
-        TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv;
+        TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv, pComments;
         ImageButton moreBtn;
         Button likeBtn, commentBtn, shareBtn;
         LinearLayout profileLayout;

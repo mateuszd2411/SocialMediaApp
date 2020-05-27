@@ -42,12 +42,15 @@ public class PostDetailActivity extends AppCompatActivity {
     String myUid, myEmail, myName, myDp,
     postId, pLikes, hisDp, hisName;
 
+    boolean mProcessCount = false;
+    boolean mProcessLike = false;
+
     //progress bar
     ProgressDialog pd;
 
     //views
     ImageView uPictureIv, pImageIv;
-    TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv;
+    TextView uNameTv, pTimeTv, pTitleTv, pDescriptionTv, pLikesTv, pCommentsTv;
     ImageButton moreBtn;
     Button likeBtn, shareBtn;
     LinearLayout profileLayout;
@@ -80,6 +83,7 @@ public class PostDetailActivity extends AppCompatActivity {
         pTitleTv = findViewById(R.id.pTitleTv);
         pDescriptionTv = findViewById(R.id.pDescriptionTv);
         pLikesTv = findViewById(R.id.pLikesTv);
+        pCommentsTv = findViewById(R.id.pCommentsTv);
         moreBtn = findViewById(R.id.moreBtn);
         likeBtn = findViewById(R.id.likeBtn);
         shareBtn = findViewById(R.id.shareBtn);
@@ -103,6 +107,54 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 postComment();
+            }
+        });
+
+        //like button click handel
+        likeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                likePost();
+            }
+        });
+
+    }
+
+    private void likePost() {
+        //get total number of likes for the post, whose like button clicked
+        //if currently signed in user has not liked it before
+        //increase value by 1, otherwise decrease value by 1
+        mProcessLike = true;
+        //get id of the post clicked
+        final DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+        final DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
+        likesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (mProcessLike) {
+                    if (dataSnapshot.child(postId).hasChild(myUid)) {
+                        //already liked, so remove like
+                        postsRef.child(postId).child("pLikes").setValue("" + (Integer.parseInt(pLikes) - 1));
+                        likesRef.child(postId).child(myUid).removeValue();
+                        mProcessLike = false;
+
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0, 0, 0);
+                        likeBtn.setText("Like");
+                    } else {
+                        //not liked, like it
+                        postsRef.child(postId).child("pLikes").setValue("" + (Integer.parseInt(pLikes) + 1));
+                        likesRef.child(postId).child(myUid).setValue("Liked");
+                        mProcessLike = false;
+
+                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+                        likeBtn.setText("Liked");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -144,6 +196,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         pd.dismiss();
                         Toast.makeText(PostDetailActivity.this, "Comment Added...", Toast.LENGTH_SHORT).show();
                         commentEt.setText("");
+                        updateCommentCount();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -154,6 +207,28 @@ public class PostDetailActivity extends AppCompatActivity {
                         Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void updateCommentCount() {
+        //whenever user adds comment increase the component the comment count as we did for like count
+        mProcessCount = true;
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (mProcessCount) {
+                    String comments = "" + dataSnapshot.child("pComments").getValue();
+                    int newCommentVal = Integer.parseInt(comments) + 1;
+                    ref.child("pComments").setValue("" + newCommentVal);
+                    mProcessCount = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadUserInfo() {
@@ -202,6 +277,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     String uid = "" + ds.child("uid").getValue();
                     String uEmail = "" + ds.child("uEmail").getValue();
                     hisName = "" + ds.child("uName").getValue();
+                    String commentCount = "" + ds.child("pComments").getValue();
 
 
                     //convert timestamp to dd/mm/yyyy hh:mm am/pm
@@ -214,6 +290,9 @@ public class PostDetailActivity extends AppCompatActivity {
                     pDescriptionTv.setText(pDescr);
                     pLikesTv.setText(pLikes + " Likes");
                     pTimeTv.setText(pTime);
+                    pCommentsTv.setText(commentCount + " Comments");
+
+                    uNameTv.setText(hisName);
 
                     //set image of the user who posted
                     //if there is no image i.e pImage.equals("noImage") then hide ImageView
