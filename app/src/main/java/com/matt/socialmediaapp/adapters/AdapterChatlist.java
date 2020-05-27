@@ -52,7 +52,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         //set data
         holder.nameTv.setText(userName);
         if (lastMessage == null || lastMessage.equals("default")) {
-            holder.lastMessageTv.setText(View.GONE);
+            holder.lastMessageTv.setVisibility(View.GONE);
         } else {
             holder.lastMessageTv.setVisibility(View.VISIBLE);
             holder.lastMessageTv.setText(lastMessage);
@@ -65,10 +65,10 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         //set online status of other users in charlist
         if (userList.get(position).getOnlineStatus().equals("online")) {
             //online
-            Picasso.get().load(R.drawable.circle_online).into(holder.onlineStatusIv);
+            holder.onlineStatusIv.setImageResource(R.drawable.circle_online);
         } else {
             //offline
-            Picasso.get().load(R.drawable.circle_offline).into(holder.onlineStatusIv);
+            holder.onlineStatusIv.setImageResource(R.drawable.circle_offline);
         }
 
         //handle click of user chatlist
