@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -35,6 +41,9 @@ public class PostDetailActivity extends AppCompatActivity {
     //to get detail of user and post
     String myUid, myEmail, myName, myDp,
     postId, pLikes, hisDp, hisName;
+
+    //progress bar
+    ProgressDialog pd;
 
     //views
     ImageView uPictureIv, pImageIv;
@@ -93,9 +102,58 @@ public class PostDetailActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                postComment();
             }
         });
+    }
+
+    private void postComment() {
+        pd = new ProgressDialog(this);
+        pd.setMessage("Adding comment...");
+
+        //get data from comment edit text
+        String comment = commentEt.getText().toString().trim();
+        //validate
+        if (TextUtils.isEmpty(comment)) {
+            //not value is entered
+            Toast.makeText(this, "Comment is emty...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+
+        //each post will have a child "Comments" that will contain comments of that post
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        //put info in hashMap
+        hashMap.put("cId", timeStamp);
+        hashMap.put("comment", comment);
+        hashMap.put("timestamp", timeStamp);
+        hashMap.put("uId", myUid);
+        hashMap.put("uEmail", myEmail);
+        hashMap.put("uDp", myDp);
+        hashMap.put("uName", myName);
+
+        //put this data in db
+        ref.child(timeStamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //added
+                        pd.dismiss();
+                        Toast.makeText(PostDetailActivity.this, "Comment Added...", Toast.LENGTH_SHORT).show();
+                        commentEt.setText("");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed, not added
+                        pd.dismiss();
+                        Toast.makeText(PostDetailActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadUserInfo() {
