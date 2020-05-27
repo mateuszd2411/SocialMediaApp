@@ -1,8 +1,10 @@
 <component name="ProjectDictionaryState">
   <dictionary name="szef">
     <words>
+      <w>chatlist</w>
       <w>edittext</w>
       <w>firebase</w>
+      <w>recyclerview</w>
       <w>textview</w>
     </words>
   </dictionary>

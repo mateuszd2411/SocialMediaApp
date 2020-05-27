@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +21,16 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.models.ModelChatlist;
+import com.matt.socialmediaapp.models.ModelUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -29,6 +40,11 @@ public class ChatListFragment extends Fragment {
 
     //firebase auth
     FirebaseAuth firebaseAuth;
+    RecyclerView recyclerView;
+    List<ModelChatlist> chatlistList;
+    List<ModelUser> userList;
+    DatabaseReference reference;
+    FirebaseUser currentUser;
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -43,8 +59,47 @@ public class ChatListFragment extends Fragment {
 
         //init
         firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        recyclerView = view.findViewById(R.id.recyclerView);
+
+        chatlistList = new ArrayList<>();
+
+        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                chatlistList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelChatlist chatlist = ds.getValue(ModelChatlist.class);
+                    chatlistList.add(chatlist);
+                }
+                loadChats();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         return view;
+    }
+
+    private void loadChats() {
+        userList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void checkUserStatus() {

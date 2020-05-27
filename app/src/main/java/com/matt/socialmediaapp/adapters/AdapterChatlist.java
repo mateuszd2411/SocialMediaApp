@@ -1,6 +1,7 @@
 package com.matt.socialmediaapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.matt.socialmediaapp.ChatActivity;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.models.ModelUser;
 import com.squareup.picasso.Picasso;
@@ -24,10 +26,10 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
     private HashMap<String, String> lastMessageMap;
 
     //constructors
-    public AdapterChatlist(Context context, List<ModelUser> userList, HashMap<String, String> lastMessageMap) {
+    public AdapterChatlist(Context context, List<ModelUser> userList) {
         this.context = context;
         this.userList = userList;
-        this.lastMessageMap = lastMessageMap;
+        lastMessageMap = new HashMap<>();
     }
 
     @NonNull
@@ -42,7 +44,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         //get data
-        String hisUid = userList.get(position).getUid();
+        final String hisUid = userList.get(position).getUid();
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         String lastMessage = lastMessageMap.get(hisUid);
@@ -68,6 +70,22 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             //offline
             Picasso.get().load(R.drawable.circle_offline).into(holder.onlineStatusIv);
         }
+
+        //handle click of user chatlist
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //start chat activity with that user
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("hisUid", hisUid);
+                context.startActivity(intent);
+            }
+        });
+
+    }
+
+    public void setLastMessageMap(String userId, String lastMessage) {
+        lastMessageMap.put(userId, lastMessage);
     }
 
     @Override
