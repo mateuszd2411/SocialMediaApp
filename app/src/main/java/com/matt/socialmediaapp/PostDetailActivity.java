@@ -168,8 +168,10 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     commentList.add(modelComment);
 
+                    //pass myUid and postId as parameter of constructor of Comment Adapter
+
                     //setup adapter
-                    adapterComments = new AdapterComments(getApplicationContext(), commentList);
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList, myUid, postId);
                     //set adapter
                     recyclerView.setAdapter(adapterComments);
                 }
@@ -385,7 +387,7 @@ public class PostDetailActivity extends AppCompatActivity {
         hashMap.put("cId", timeStamp);
         hashMap.put("comment", comment);
         hashMap.put("timestamp", timeStamp);
-        hashMap.put("uId", myUid);
+        hashMap.put("uid", myUid);
         hashMap.put("uEmail", myEmail);
         hashMap.put("uDp", myDp);
         hashMap.put("uName", myName);
