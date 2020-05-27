@@ -99,6 +99,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
         loadUserInfo();
 
+        setLikes();
+
+
         //set subtitle of actionbar
         actionBar.setSubtitle("SignedIn as: " + myEmail);
 
@@ -118,6 +121,38 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void setLikes() {
+        //when the details of post is loading, also check if current user has liked it or not
+        final DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+
+        likesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(postId).hasChild(myUid)) {
+                    //user has liked this post
+                    /*To indicate that the post is liked by this(SignedIn) user
+                    Change drawable left icon of like button
+                    Change text of like button from "Like" to "Liked"*/
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+                    likeBtn.setText("Liked");
+                } else {
+                    //user has not liked this post
+                    /*To indicate that the post is liked by this(SignedIn) user
+                    Change drawable left icon of like button
+                    Change text of like button from "Liked" to "Like"*/
+                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0, 0, 0);
+                    likeBtn.setText("Like");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void likePost() {
@@ -138,16 +173,11 @@ public class PostDetailActivity extends AppCompatActivity {
                         likesRef.child(postId).child(myUid).removeValue();
                         mProcessLike = false;
 
-                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like_black, 0, 0, 0);
-                        likeBtn.setText("Like");
                     } else {
                         //not liked, like it
                         postsRef.child(postId).child("pLikes").setValue("" + (Integer.parseInt(pLikes) + 1));
                         likesRef.child(postId).child(myUid).setValue("Liked");
                         mProcessLike = false;
-
-                        likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
-                        likeBtn.setText("Liked");
                     }
                 }
             }
@@ -244,7 +274,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     //set data
                     try {
                         //if image is received then set
-                        Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                        Picasso.get().load(myDp).placeholder(R.drawable.ic_default_img).into(cAvatarIv);
                     } catch (Exception e) {
                         Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
                     }
