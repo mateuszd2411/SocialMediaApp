@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
@@ -35,10 +36,14 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.matt.socialmediaapp.adapters.AdapterComments;
+import com.matt.socialmediaapp.models.ModelComment;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class PostDetailActivity extends AppCompatActivity {
@@ -60,6 +65,9 @@ public class PostDetailActivity extends AppCompatActivity {
     Button likeBtn, shareBtn;
     LinearLayout profileLayout;
     RecyclerView recyclerView;
+
+    List<ModelComment> commentList;
+    AdapterComments adapterComments;
 
     //add cements views
     EditText commentEt;
@@ -112,6 +120,8 @@ public class PostDetailActivity extends AppCompatActivity {
         //set subtitle of actionbar
         actionBar.setSubtitle("SignedIn as: " + myEmail);
 
+        loadComments();
+
         //send comment button click
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +146,40 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadComments() {
+        //layout(Liner) for recyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        //set layout to recyclerView
+        recyclerView.setLayoutManager(layoutManager);
+
+        //init comments list
+        commentList = new ArrayList<>();
+
+        //path of the post, to get it's comments
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                commentList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelComment modelComment = ds.getValue(ModelComment.class);
+
+                    commentList.add(modelComment);
+
+                    //setup adapter
+                    adapterComments = new AdapterComments(getApplicationContext(), commentList);
+                    //set adapter
+                    recyclerView.setAdapter(adapterComments);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void showMoreOptions() {
