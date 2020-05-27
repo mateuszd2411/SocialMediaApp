@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.matt.socialmediaapp.AddPostActivity;
+import com.matt.socialmediaapp.PostDetailActivity;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.ThereProfileActivity;
 import com.matt.socialmediaapp.models.ModelPost;
@@ -168,8 +169,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //will implement later
-                Toast.makeText(context, "Click Comment", Toast.LENGTH_SHORT).show();
+                //start PostDetailActivity
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId", pId); //will get detail of post using this id, its id of the post clicked
+                context.startActivity(intent);
             }
         });
         holder.shareBtn.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +233,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
             popupMenu.getMenu().add(Menu.NONE, 1, 0, "Edit");
         }
+        popupMenu.getMenu().add(Menu.NONE, 2, 0, "View Detail");
 
         //item click listener
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -246,6 +250,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
                     Intent intent = new Intent(context, AddPostActivity.class);
                     intent.putExtra("key", "editPost");
                     intent.putExtra("editPostId", pId);
+                    context.startActivity(intent);
+                } else if (id == 2) {
+                    //start PostDetailActivity
+                    Intent intent = new Intent(context, PostDetailActivity.class);
+                    intent.putExtra("postId", pId); //will get detail of post using this id, its id of the post clicked
                     context.startActivity(intent);
                 }
                 return false;
