@@ -162,6 +162,20 @@
 
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:text="Comments"
+                android:textColor="@color/colorBlack"
+                android:drawableStart="@drawable/ic_comments_black"
+                android:drawablePadding="5dp"
+                android:padding="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <RelativeLayout
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
