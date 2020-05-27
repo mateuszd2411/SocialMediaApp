@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +81,48 @@ public class PostDetailActivity extends AppCompatActivity {
         cAvatarIv = findViewById(R.id.cAvatarIv);
 
         loadPostInfo();
+
+        checkUserStatus();
+
+        loadUserInfo();
+
+        //set subtitle of actionbar
+        actionBar.setSubtitle("SignedIn as: " + myEmail);
+
+        //send comment button click
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    private void loadUserInfo() {
+        //get current user info
+        Query myRef = FirebaseDatabase.getInstance().getReference("Users");
+        myRef.orderByChild("uid").equalTo(myUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    myName = "" + ds.child("name").getValue();
+                    myDp = "" + ds.child("image").getValue();
+
+                    //set data
+                    try {
+                        //if image is received then set
+                        Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.ic_default_img).into(cAvatarIv);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadPostInfo() {
@@ -127,6 +173,12 @@ public class PostDetailActivity extends AppCompatActivity {
                         }
                     }
 
+                    //set user image in comment part
+                    try {
+                        Picasso.get().load(hisDp).placeholder(R.drawable.ic_default_img).into(uPictureIv);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.ic_default_img).into(uPictureIv);
+                    }
                 }
             }
 
@@ -137,9 +189,42 @@ public class PostDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void checkUserStatus() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            //user is signed in
+            myEmail = user.getEmail();
+            myUid = user.getUid();
+        } else {
+            //user not signed in, go to main activity
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //hide some menu items
+        menu.findItem(R.id.action_add_post).setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //get item id
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            FirebaseAuth.getInstance().signOut();
+            checkUserStatus();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
