@@ -4,21 +4,21 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/messageLayout"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/messageLayout">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
             android:id="@+id/profileIv"
             android:src="@drawable/ic_default_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:visibility="gone"
-            />
+            app:c_border_color="@null"/>
 
         <TextView
             android:id="@+id/timeTv"
@@ -30,16 +30,31 @@
 
         <TextView
             android:id="@+id/messageTv"
-            android:layout_weight="1"
             android:textSize="16sp"
             android:textColor="@color/colorBlack"
             android:background="@drawable/bg_sender"
             android:padding="15dp"
             android:text="His message"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/timeTv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/timeTv"
+            android:layout_alignParentRight="true" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/messageIv"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentEnd="true"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            android:src="@drawable/ic_image_black"
+            android:scaleType="fitCenter"
+            android:background="@drawable/bg_sender"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -48,4 +63,5 @@
         android:gravity="end"
         android:textAlignment="textEnd"
         android:text="delivered"/>
+
 </LinearLayout>
