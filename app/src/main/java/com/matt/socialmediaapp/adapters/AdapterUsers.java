@@ -183,7 +183,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
         //put values in hashMap to put id db
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("myUid", hisUID);
+        hashMap.put("uid", hisUID);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(myUid).child("BlockedUsers").child(hisUID).setValue(hashMap)
