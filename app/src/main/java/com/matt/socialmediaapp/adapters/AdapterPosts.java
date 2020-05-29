@@ -206,10 +206,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
         holder.profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /* click to go to ThereProfileActivity with uid, this uid is of clicked user
+                /* click to go to ThereProfileActivity with myUid, this myUid is of clicked user
                 witch will be used to show user specific data/posts*/
                 Intent intent = new Intent(context, ThereProfileActivity.class);
-                intent.putExtra("uid", uid);
+                intent.putExtra("myUid", uid);
                 context.startActivity(intent);
             }
         });

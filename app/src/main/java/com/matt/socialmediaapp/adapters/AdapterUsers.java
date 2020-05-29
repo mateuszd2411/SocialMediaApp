@@ -14,13 +14,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.matt.socialmediaapp.ChatActivity;
 import com.matt.socialmediaapp.ThereProfileActivity;
 import com.matt.socialmediaapp.models.ModelUser;
 import com.matt.socialmediaapp.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,16 +38,16 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     Context context;
     List<ModelUser> userList;
 
-    //for getting current user's uid
+    //for getting current user's myUid
     FirebaseAuth firebaseAuth;
-    String uid;
+    String myUid;
 
     public AdapterUsers(Context context, List<ModelUser> userList) {
         this.context = context;
         this.userList = userList;
 
         firebaseAuth = FirebaseAuth.getInstance();
-        uid = firebaseAuth.getUid();
+        myUid = firebaseAuth.getUid();
     }
 
     @NonNull
@@ -52,7 +60,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         //get data
         final String hisUID = userList.get(position).getUid();
         String userImage = userList.get(position).getImage();
@@ -69,6 +77,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         } catch (Exception e) {
 
         }
+
+
+
         //handle item click
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +91,10 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (i == 0) {
                             //profile clicked
-                            /* click to go to ThereProfileActivity with uid, this uid is of clicked user
+                            /* click to go to ThereProfileActivity with myUid, this myUid is of clicked user
                             witch will be used to show user specific data/posts*/
                             Intent intent = new Intent(context, ThereProfileActivity.class);
-                            intent.putExtra("uid", hisUID);
+                            intent.putExtra("myUid", hisUID);
                             context.startActivity(intent);
                         }
                         if (i == 1) {
@@ -104,10 +115,75 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         holder.blockIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (userList.get(position).isBlocked()) {
+                    unBlockUser(hisUID);
+                } else {
+                    blockUser(hisUID);
+                }
             }
         });
 
+    }
+
+    private void blockUser(String hisUID) {
+        //block the user, by adding myUid to current user's "BlockedUsers" node
+
+        //put values in hashMap to put id db
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("myUid", hisUID);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(myUid).child("BlockedUsers").child(hisUID).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //blocked successfully
+                        Toast.makeText(context, "Blocked Successfully...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed
+                        Toast.makeText(context, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void unBlockUser(String hisUID) {
+        //unblock the user, by removing myUid from current user's "BlockedUsers" node
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(myUid).child("BlockedUsers").orderByChild("uid").equalTo(hisUID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.exists()) {
+                                //remove blocked user from current user's BlockedUsers list
+                                ds.getRef().removeValue()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                //unblocked user successfully
+                                                Toast.makeText(context, "Unblocked Successfully...", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @Override
