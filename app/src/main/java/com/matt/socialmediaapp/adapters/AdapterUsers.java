@@ -78,7 +78,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
 
         }
 
-
+        holder.blockIv.setImageResource(R.drawable.ic_unblock_green);
+        //check if each user if is blocked or not
+        checkIsBlocked(hisUID, holder, position);
 
         //handle item click
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -100,10 +102,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                         if (i == 1) {
                             //chat clicked
                             //Click user from user list to start chatting
-                            Intent intent = new Intent(context, ChatActivity.class);
-                            intent.putExtra("hisUid", hisUID);
-                            context.startActivity(intent);
-
+                            isBlockedOrNot(hisUID);
                         }
                     }
                 });
@@ -123,6 +122,60 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
             }
         });
 
+    }
+
+    private void isBlockedOrNot(final String hisUID) {
+        //first check if sender(current user) is blocked by receiver or not
+        //Logic: if uid of the sender(current user) exists in "BlockedUser" of receiver then sender(current user) is blocked, otherwise not
+        // if blocked then just display a message e.g You're blocked by that user, can't send message
+        //if not blocked then simply start the chat activity
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(hisUID).child("BlockedUsers").orderByChild("uid").equalTo(myUid)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.exists()) {
+                                Toast.makeText(context, "You're blocked by that user, can't send message...", Toast.LENGTH_SHORT).show();
+                                //blocked don't proceed further
+                                return;
+                            }
+                        }
+                        //not blocked start activity
+                        Intent intent = new Intent(context, ChatActivity.class);
+                        intent.putExtra("hisUid", hisUID);
+                        context.startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void checkIsBlocked(String hisUID, final MyHolder holder, final int position) {
+        //check each user, if blocked or not
+        // if uid of the user exists in "BlockedUsers" then that user is blocked, otherwise not
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(myUid).child("BlockedUsers").orderByChild("uid").equalTo(hisUID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.exists()) {
+                                holder.blockIv.setImageResource(R.drawable.ic_blocked_red);
+                                userList.get(position).setBlocked(true);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void blockUser(String hisUID) {
