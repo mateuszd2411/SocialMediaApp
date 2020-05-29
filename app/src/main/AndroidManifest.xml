@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PostDetailActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".PostDetailActivity" />
         <activity android:name=".ThereProfileActivity" />
         <activity android:name=".AddPostActivity" />
         <activity
@@ -46,11 +47,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        
-        
+
         <provider
-            android:authorities="com.matt.socialmediaapp.fileprovider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.matt.socialmediaapp.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
