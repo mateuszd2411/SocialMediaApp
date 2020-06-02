@@ -1,21 +1,29 @@
 package com.matt.socialmediaapp.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.PostDetailActivity;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.models.ModelNotifications;
 import com.squareup.picasso.Picasso;
@@ -24,28 +32,32 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AdapterNotification extends RecyclerView.Adapter<AdapterNotification.HolderNotificacion>{
+public class AdapterNotification extends RecyclerView.Adapter<AdapterNotification.HolderNotification> {
 
     private Context context;
     private ArrayList<ModelNotifications> notificationsList;
 
+    private FirebaseAuth firebaseAuth;
+
     public AdapterNotification(Context context, ArrayList<ModelNotifications> notificationsList) {
         this.context = context;
         this.notificationsList = notificationsList;
+
+        firebaseAuth = FirebaseAuth.getInstance();
     }
 
     @NonNull
     @Override
-    public HolderNotificacion onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HolderNotification onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //inflate view row_notification
 
         View view = LayoutInflater.from(context).inflate(R.layout.row_notification, parent, false);
 
-        return new HolderNotificacion(view);
+        return new HolderNotification(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final HolderNotificacion holder, int position) {
+    public void onBindViewHolder(@NonNull final HolderNotification holder, int position) {
         //get and set data to views
 
         //get data
@@ -53,8 +65,9 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         String name = model.getsName();
         String notification = model.getNotification();
         String image = model.getsImage();
-        String timestamp = model.getTimestamp();
+        final String timestamp = model.getTimestamp();
         String senderUid = model.getsUid();
+        final String pId = model.getpId();
 
         //convert timestamp to dd/mm/yyyy hh:mm am/pm
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -98,6 +111,58 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
         holder.notificationTv.setText(notification);
         holder.timeTv.setText(pTime);
 
+        //click notification to open post
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //start PostDetailActivity
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId", pId); //will get detail of post using this id, its id of the post clicked
+                context.startActivity(intent);
+            }
+        });
+
+        //long press to show delete notification option
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                //show confirmation dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete");
+                builder.setMessage("Are you sure to delete this notification?");
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //delete
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                        ref.child(firebaseAuth.getUid()).child("Notifications").child(timestamp)
+                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(context, "Notification deleted...", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //cancel
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.create().show();
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -106,13 +171,13 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
     }
 
     //holder class for views of row_notifications.xml
-    class HolderNotificacion extends RecyclerView.ViewHolder {
+    class HolderNotification extends RecyclerView.ViewHolder {
 
         //decelerate views
         ImageView avatarIv;
         TextView nameTv, notificationTv, timeTv;
 
-        public HolderNotificacion(@NonNull View itemView) {
+        public HolderNotification(@NonNull View itemView) {
             super(itemView);
 
             //init views
