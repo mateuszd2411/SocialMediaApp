@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,14 +17,21 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class GroupCreateActivity extends AppCompatActivity {
 
@@ -49,6 +57,8 @@ public class GroupCreateActivity extends AppCompatActivity {
     private ImageView groupIconIv;
     private EditText groupTitleEt, groupDescriptionEt;
     private FloatingActionButton createGroupBtn;
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +95,71 @@ public class GroupCreateActivity extends AppCompatActivity {
         createGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startCreatingGroup();
 
             }
         });
+    }
+
+    private void startCreatingGroup() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating Group");
+
+        //input title, description
+        String groupTitle = groupTitleEt.getText().toString().trim();
+        String groupDescription = groupDescriptionEt.getText().toString().trim();
+        //validate
+        if (TextUtils.isEmpty(groupTitle)) {
+            Toast.makeText(this, "Please enter group title...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        progressDialog.show();
+
+        //timestamp: for group icon image, groupId, timeCreated etc
+        String g_timestamp = "" + System.currentTimeMillis();
+        if (image_uri == null) {
+            //creating group without image
+
+            createGroup(
+                    "" + g_timestamp,
+                    "" + groupTitle,
+                    "" + groupDescription,
+                    "");
+        } else {
+            //create group with image
+        }
+
+    }
+
+    private void createGroup(String g_timestamp, String grouTitle, String groupDescription, String groupIcon) {
+        //setup info of group
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("groupId", "" + g_timestamp);
+        hashMap.put("groupTitle", "" + grouTitle);
+        hashMap.put("groupDescription", "" + groupDescription);
+        hashMap.put("groupIcon", "" + groupIcon);
+        hashMap.put("timestamp", "" + g_timestamp);
+        hashMap.put("createdBy", "" + firebaseAuth.getUid());
+
+        //create group
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(g_timestamp).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //created successfully
+                        progressDialog.dismiss();
+                        Toast.makeText(GroupCreateActivity.this, "Group created successfully...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(GroupCreateActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void showImagePickDialog() {
