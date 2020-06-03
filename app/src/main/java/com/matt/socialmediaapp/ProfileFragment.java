@@ -318,10 +318,11 @@ public class ProfileFragment extends Fragment {
         2) Edit Cover Photo
         3) Edit Name
         4) Edit Phone
+        5) Change Password
          */
 
         //options to show in dialog
-        String options[] = {"Edit Profile Picture", "Edit Cover Photo", "Edit Name", "Edit Phone"};
+        String options[] = {"Edit Profile Picture", "Edit Cover Photo", "Edit Name", "Edit Phone", "Change Password"};
         //alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //set title
@@ -353,9 +354,29 @@ public class ProfileFragment extends Fragment {
                     progressDialog.setMessage("Updating Phone");
                     showNamePhoneUpdateDialog("phone");
                 }
+                if (which == 4) {
+                    //Edit Phone clicked
+                    progressDialog.setMessage("Changing Password");
+                    showChangePasswordDialog();
+                }
             }
         });
         //create and show dialog
+        builder.create().show();
+    }
+
+    private void showChangePasswordDialog() {
+        //password change dialog with custom layout having currentPassword, newPassword and update button
+
+        //inflate layout for dialog
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_update_password, null);
+        EditText passwordEt = view.findViewById(R.id.passwordEt);
+        EditText newPasswordEt = view.findViewById(R.id.newPasswordEt);
+        EditText updatePasswordBtn = view.findViewById(R.id.updatePasswordBtn);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(view);  //set view to dialog
+
         builder.create().show();
     }
 
