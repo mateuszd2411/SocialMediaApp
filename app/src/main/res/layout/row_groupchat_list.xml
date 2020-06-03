@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     app:cardBackgroundColor="@color/colorWhite"
     app:contentPadding="3dp"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
