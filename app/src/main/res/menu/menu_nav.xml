@@ -22,8 +22,8 @@
         android:icon="@drawable/ic_chat_black" />
 
     <item
-        android:id="@+id/nav_notification"
+        android:id="@+id/nav_more"
         android:title="Notifications"
-        android:icon="@drawable/ic_notification_black" />
+        android:icon="@drawable/ic_more_black" />
 
 </menu>
