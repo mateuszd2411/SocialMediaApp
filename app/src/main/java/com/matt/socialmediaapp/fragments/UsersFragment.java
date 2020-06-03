@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.fragments;
 
 
 import android.content.Intent;
@@ -27,6 +27,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.GroupCreateActivity;
+import com.matt.socialmediaapp.MainActivity;
+import com.matt.socialmediaapp.R;
+import com.matt.socialmediaapp.SettingsActivity;
 import com.matt.socialmediaapp.adapters.AdapterUsers;
 import com.matt.socialmediaapp.models.ModelUser;
 
@@ -238,6 +242,10 @@ public class UsersFragment extends Fragment {
         else if (id == R.id.action_settings) {
             //go to settings activity
             startActivity(new Intent(getActivity(), SettingsActivity.class));
+        }
+        else if (id == R.id.action_create_group) {
+            //go to GroupCreateActivity activity
+            startActivity(new Intent(getActivity(), GroupCreateActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

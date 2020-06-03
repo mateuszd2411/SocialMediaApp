@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.fragments;
 
 
 import android.Manifest;
@@ -52,6 +52,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.matt.socialmediaapp.AddPostActivity;
+import com.matt.socialmediaapp.MainActivity;
+import com.matt.socialmediaapp.R;
+import com.matt.socialmediaapp.SettingsActivity;
 import com.matt.socialmediaapp.adapters.AdapterPosts;
 import com.matt.socialmediaapp.models.ModelPost;
 import com.squareup.picasso.Picasso;
@@ -824,6 +828,9 @@ public class ProfileFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
+
+        //hide some options
+        menu.findItem(R.id.action_create_group).setVisible(false);
 
         MenuItem item = menu.findItem(R.id.action_search);
         //v7 searchView to search user specific posts

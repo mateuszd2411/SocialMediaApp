@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.fragments;
 
 
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.adapters.AdapterNotification;
 import com.matt.socialmediaapp.models.ModelNotifications;
 

@@ -16,6 +16,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.matt.socialmediaapp.fragments.ChatListFragment;
+import com.matt.socialmediaapp.fragments.HomeFragment;
+import com.matt.socialmediaapp.fragments.NotificationsFragment;
+import com.matt.socialmediaapp.fragments.ProfileFragment;
+import com.matt.socialmediaapp.fragments.UsersFragment;
 import com.matt.socialmediaapp.notifications.Token;
 
 public class DashboardActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.matt.socialmediaapp;
+package com.matt.socialmediaapp.fragments;
 
 
 import android.content.Intent;
@@ -28,6 +28,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.AddPostActivity;
+import com.matt.socialmediaapp.MainActivity;
+import com.matt.socialmediaapp.R;
+import com.matt.socialmediaapp.SettingsActivity;
 import com.matt.socialmediaapp.adapters.AdapterPosts;
 import com.matt.socialmediaapp.models.ModelPost;
 
@@ -168,6 +172,9 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflating menu
         inflater.inflate(R.menu.menu_main, menu);
+
+        //hide some options
+        menu.findItem(R.id.action_create_group).setVisible(false);
 
         //searchView to search posts by post title/description
         MenuItem item = menu.findItem(R.id.action_search);
