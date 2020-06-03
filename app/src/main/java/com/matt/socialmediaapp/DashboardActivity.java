@@ -138,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity {
                 if (id == 0) {
                     //notifications clicked
 
-                    //users fragment transaction
+                    //Notifications fragment transaction
                     actionBar.setTitle("Notifications");
                     NotificationsFragment fragment5 = new NotificationsFragment();
                     FragmentTransaction ft5 = getSupportFragmentManager().beginTransaction();
@@ -146,10 +146,18 @@ public class DashboardActivity extends AppCompatActivity {
                     ft5.commit();
                 } else if (id == 1) {
                     //group chats clicked
+
+                    //Group Chats fragment transaction
+                    actionBar.setTitle("Group Chats");
+                    GroupChatsFragment fragment6 = new GroupChatsFragment();
+                    FragmentTransaction ft6 = getSupportFragmentManager().beginTransaction();
+                    ft6.replace(R.id.content, fragment6, "");
+                    ft6.commit();
                 }
                 return false;
             }
         });
+        popupMenu.show();
     }
 
     private void checkUserStatus() {
