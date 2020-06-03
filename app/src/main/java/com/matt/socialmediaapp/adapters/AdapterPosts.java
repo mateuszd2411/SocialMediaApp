@@ -38,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.matt.socialmediaapp.AddPostActivity;
 import com.matt.socialmediaapp.PostDetailActivity;
+import com.matt.socialmediaapp.PostLikedByActivity;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.ThereProfileActivity;
 import com.matt.socialmediaapp.models.ModelPost;
@@ -213,6 +214,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder>{
                 witch will be used to show user specific data/posts*/
                 Intent intent = new Intent(context, ThereProfileActivity.class);
                 intent.putExtra("myUid", uid);
+                context.startActivity(intent);
+            }
+        });
+
+        //click like count to start PostLikeByActivity, and pass the post id
+        holder.pLikesTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostLikedByActivity.class);
+                intent.putExtra("postId", pId);
                 context.startActivity(intent);
             }
         });
