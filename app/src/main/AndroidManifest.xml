@@ -14,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GroupChatActivity"
-            android:theme="@style/AppThemeNo"/>
+        <activity android:name=".GroupParticipantAddActivity"></activity>
+        <activity
+            android:name=".GroupChatActivity"
+            android:theme="@style/AppThemeNo" />
         <activity android:name=".GroupCreateActivity" />
         <activity android:name=".PostLikedByActivity" />
         <activity android:name=".SettingsActivity" />
