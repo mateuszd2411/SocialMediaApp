@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
+        app:stackFromEnd="true"
         android:layout_above="@+id/chatLayout"
         tools:listitem="@layout/row_groupchat_left"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>

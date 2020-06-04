@@ -23,8 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.adapters.AdapterGroupChat;
+import com.matt.socialmediaapp.models.ModelGroupChat;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GroupChatActivity extends AppCompatActivity {
@@ -39,6 +42,10 @@ public class GroupChatActivity extends AppCompatActivity {
     private TextView groupTitleTv;
     private EditText messageEt;
     private RecyclerView chatRv;
+
+    private ArrayList<ModelGroupChat> groupChatsList;
+    private AdapterGroupChat adapterGroupChat;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         loadGroupInfo();
+        loadGroupMessages();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +84,33 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadGroupMessages() {
+        //init list
+        groupChatsList = new ArrayList<>();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Messages")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        groupChatsList.clear();
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            ModelGroupChat model = ds.getValue(ModelGroupChat.class);
+                            groupChatsList.add(model);
+                        }
+                        //adapter
+                        adapterGroupChat = new AdapterGroupChat(GroupChatActivity.this, groupChatsList);
+                        //set to recyclerView
+                        chatRv.setAdapter(adapterGroupChat);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void sendMessage(String message) {
@@ -97,6 +132,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //message sent
+                        messageEt.setText("");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
