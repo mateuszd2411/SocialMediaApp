@@ -1,6 +1,7 @@
 package com.matt.socialmediaapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.matt.socialmediaapp.GroupChatActivity;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.models.ModelGroupChatList;
 import com.squareup.picasso.Picasso;
@@ -40,7 +42,7 @@ public class AdapterGroupChatList extends RecyclerView.Adapter<AdapterGroupChatL
 
         //get data
         ModelGroupChatList model = groupChatLists.get(position);
-        String groupId = model.getGroupId();
+        final String groupId = model.getGroupId();
         String groupIcon = model.getGroupIcon();
         String groupTitle = model.getGroupTitle();
 
@@ -56,7 +58,10 @@ public class AdapterGroupChatList extends RecyclerView.Adapter<AdapterGroupChatL
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //open group chat
+                Intent intent = new Intent(context, GroupChatActivity.class);
+                intent.putExtra("groupId", groupId);
+                context.startActivity(intent);
             }
         });
 
