@@ -3,6 +3,7 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private ImageButton attachBtn, sendBtn;
     private TextView groupTitleTv;
     private EditText messageEt;
+    private RecyclerView chatRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class GroupChatActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.sendBtn);
         groupTitleTv = findViewById(R.id.groupTitleTv);
         messageEt = findViewById(R.id.messageEt);
+        chatRv = findViewById(R.id.chatRv);
 
         //get id of the group
         Intent intent = getIntent();
