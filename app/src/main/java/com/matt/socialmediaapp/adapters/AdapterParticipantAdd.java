@@ -198,7 +198,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     }
 
     private void addParticipant(ModelUser modelUser) {
-        //setup user data
+        //setup user data - add user in group
         String timestamp = "" + System.currentTimeMillis();
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("uid", modelUser.getUid());
@@ -223,14 +223,67 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     }
 
     private void makeAdmin(ModelUser modelUser) {
+        //setup data - change role
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("role", "admin");   //roles are: participant/admin/creator
+        //update role in db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Participants").child(modelUser.getUid()).updateChildren(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //made admin
+                        Toast.makeText(context, "The User is now admin...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
     private void removeParticipant(ModelUser modelUser) {
+        //remove participant from group
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Participants").child(modelUser.getUid()).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "Removed successfully...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
     private void removeAdmin(ModelUser modelUser) {
+        //setup data - remove admin - just change role
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("role", "participant");   //roles are: participant/admin/creator
+        //update role in db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Participants").child(modelUser.getUid()).updateChildren(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //made admin
+                        Toast.makeText(context, "The User is no longer admin...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
