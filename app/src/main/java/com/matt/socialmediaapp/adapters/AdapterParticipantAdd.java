@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +25,7 @@ import com.matt.socialmediaapp.models.ModelUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipantAdd.HolderParticipantAdd>{
 
@@ -181,7 +184,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     dialogInterface.dismiss();
                                                 }
-                                            });
+                                            }).show();
                                 }
                             }
 
@@ -192,6 +195,43 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                         });
             }
         });
+    }
+
+    private void addParticipant(ModelUser modelUser) {
+        //setup user data
+        String timestamp = "" + System.currentTimeMillis();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("uid", modelUser.getUid());
+        hashMap.put("role", "participant");
+        hashMap.put("timestamp", "" + timestamp);
+        //add that user in Group>groupId>Participants
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Participants").child(modelUser.getUid()).setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //added successfully
+                        Toast.makeText(context, "Added Successfully...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void makeAdmin(ModelUser modelUser) {
+
+    }
+
+    private void removeParticipant(ModelUser modelUser) {
+
+    }
+
+    private void removeAdmin(ModelUser modelUser) {
+
     }
 
     private void checkIfAlreadyExists(ModelUser modelUser, final HolderParticipantAdd holder) {
