@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".GroupParticipantAddActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/usersRv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/row_participant_add"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

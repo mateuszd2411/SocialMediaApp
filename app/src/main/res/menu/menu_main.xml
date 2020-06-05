@@ -24,4 +24,9 @@
         android:icon="@drawable/ic_creategroup_white"
         app:showAsAction="always" />
 
+    <item android:id="@+id/action_add_participant"
+        android:title="Add Group Participant"
+        android:icon="@drawable/ic_addperson_white"
+        app:showAsAction="always" />
+
 </menu>
