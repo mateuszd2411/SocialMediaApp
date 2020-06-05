@@ -36,7 +36,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
-    private String groupId, myGroupRole;
+    private String groupId, myGroupRole = "";
 
     private Toolbar toolbar;
     private ImageView groupIconIv;
@@ -62,6 +62,8 @@ public class GroupChatActivity extends AppCompatActivity {
         groupTitleTv = findViewById(R.id.groupTitleTv);
         messageEt = findViewById(R.id.messageEt);
         chatRv = findViewById(R.id.chatRv);
+
+        setSupportActionBar(toolbar);
 
         //get id of the group
         Intent intent = getIntent();
@@ -207,9 +209,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
         if (myGroupRole.equals("creator") || myGroupRole.equals("admin")) {
             //in admin/creator, show add person option
-            menu.findItem(R.id.action_add_participant).setVisible(false);
-        } else {
             menu.findItem(R.id.action_add_participant).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_add_participant).setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -217,7 +219,7 @@ public class GroupChatActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == id.action_add_participant) {
+        if (id == R.id.action_add_participant) {
             Intent intent = new Intent(this, GroupParticipantAddActivity.class);
             intent.putExtra("groupId", groupId);
             startActivity(intent);

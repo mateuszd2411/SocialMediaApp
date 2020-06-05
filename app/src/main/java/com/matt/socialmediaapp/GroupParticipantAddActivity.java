@@ -13,6 +13,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.matt.socialmediaapp.adapters.AdapterParticipantAdd;
+import com.matt.socialmediaapp.models.ModelGroupChatList;
+import com.matt.socialmediaapp.models.ModelUser;
+
+import java.util.ArrayList;
 
 public class GroupParticipantAddActivity extends AppCompatActivity {
 
@@ -24,6 +29,9 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
 
     private String groupId;
     private String myGroupRole;
+
+    private ArrayList<ModelUser> userList;
+    private AdapterParticipantAdd adapterParticipantAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,37 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
 
         groupId = getIntent().getStringExtra("groupId");
         loadGroupInfo();
+    }
+
+    private void getAllUsers() {
+        //init list
+        userList = new ArrayList<>();
+        //load users from db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelUser modelUser = ds.getValue(ModelUser.class);
+
+                    //get all users accept currently signed in
+                    if (!firebaseAuth.getUid().equals(modelUser.getUid())) {
+                        //not my uid
+                        userList.add(modelUser);
+                    }
+                }
+                //setup adapter
+                adapterParticipantAdd = new AdapterParticipantAdd(GroupParticipantAddActivity.this, userList, "" + groupId, "" + myGroupRole);
+                //set adapter to recyclerview
+                usersRv.setAdapter(adapterParticipantAdd);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void loadGroupInfo() {
@@ -67,6 +106,8 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                     if (dataSnapshot.exists()) {
                                         myGroupRole = "" + dataSnapshot.child("role").getValue();
                                         actionBar.setTitle(groupTitle + "(" + myGroupRole + ")");
+
+                                        getAllUsers();
                                     }
                                 }
 

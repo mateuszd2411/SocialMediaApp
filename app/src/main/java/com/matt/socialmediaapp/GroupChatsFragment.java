@@ -140,6 +140,7 @@ public class GroupChatsFragment extends Fragment {
         //hide icons from this fragment
         menu.findItem(R.id.action_add_post).setVisible(false);
         menu.findItem(R.id.action_settings).setVisible(false);
+        menu.findItem(R.id.action_add_participant).setVisible(false);
 
         //SearchView
         MenuItem item = menu.findItem(R.id.action_search);
