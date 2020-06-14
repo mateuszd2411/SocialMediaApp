@@ -5,6 +5,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.matt.socialmediaapp.R;
 import com.matt.socialmediaapp.models.ModelGroupChat;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,8 +61,9 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         //get data
         ModelGroupChat model = modelGroupChatsList.get(position);
         String timestamp = model.getTimestamp();
-        String message = model.getMessage();
+        String message = model.getMessage();       //if text message then contain message, if image message then contain url of the image stored in firebase storage
         String senderUid = model.getSender();
+        String messageType = model.getType();
 
         //convert time stamp to dd/mm/yyyy hh:mm am/pm
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
@@ -68,7 +71,21 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", cal).toString();
 
         //set data
-        holder.messageTv.setText(message);
+        if (messageType.equals("text")) {
+            //text message, hide messageIv, show messageTv
+            holder.messageTv.setVisibility(View.VISIBLE);
+            holder.messageIv.setVisibility(View.GONE);
+            holder.messageTv.setText(message);
+        } else {
+            //image message
+            holder.messageTv.setVisibility(View.GONE);
+            holder.messageIv.setVisibility(View.VISIBLE);
+            try {
+                Picasso.get().load(message).placeholder(R.drawable.ic_default_img).into(holder.messageIv);
+            } catch (Exception e) {
+                holder.messageIv.setImageResource(R.drawable.ic_default_img);
+            }
+        }
         holder.timeTv.setText(dateTime);
 
         setUserName(model, holder);
@@ -112,6 +129,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
     class HolderGroupChat extends RecyclerView.ViewHolder {
 
         private TextView nameTv, messageTv, timeTv;
+        private ImageView messageIv;
 
         public HolderGroupChat(@NonNull View itemView) {
             super(itemView);
@@ -119,6 +137,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             nameTv = itemView.findViewById(R.id.nameTv);
             messageTv = itemView.findViewById(R.id.messageTv);
             timeTv = itemView.findViewById(R.id.timeTv);
+            messageIv = itemView.findViewById(R.id.messageIv);
         }
     }
 

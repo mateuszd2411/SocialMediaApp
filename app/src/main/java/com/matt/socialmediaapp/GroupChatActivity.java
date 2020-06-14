@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -48,6 +50,19 @@ public class GroupChatActivity extends AppCompatActivity {
     private ArrayList<ModelGroupChat> groupChatsList;
     private AdapterGroupChat adapterGroupChat;
 
+    //permission request constants
+    private static final int CAMERA_REQUEST_CODE = 200;
+    private static final int STORAGE_REQUEST_CODE = 400;
+    //image pick constant
+    private static final int IMAGE_PICK_GALLERY_CODE = 1000;
+    private static final int IMAGE_PICK_CAMERA_CODE = 2000;
+    //permissions to be requested
+    private String[] cameraPermission;
+    private String[] storagePermission;
+    //uri of picked image
+    private Uri image_uri = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +84,15 @@ public class GroupChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
 
+        //init required permissions
+        cameraPermission = new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        storagePermission = new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+
         firebaseAuth = FirebaseAuth.getInstance();
         loadGroupInfo();
         loadGroupMessages();
@@ -86,6 +110,13 @@ public class GroupChatActivity extends AppCompatActivity {
                     //send message
                     sendMessage(message);
                 }
+            }
+        });
+
+        attachBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pick image from camera/gallery
             }
         });
 
