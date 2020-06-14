@@ -1,14 +1,22 @@
 package com.matt.socialmediaapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -117,9 +125,86 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //pick image from camera/gallery
+                showImageImportDialog();
             }
         });
 
+    }
+
+    private void showImageImportDialog() {
+        //options to display
+        String[] options = {"Camera", "Gallery"};
+
+        //dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick Image")
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //handle clicks
+                        if (which == 0) {
+                            //camera clicked
+                            if (!checkCameraPermission()) {
+                                //not granted, request
+                                requestCameraPermission();
+                            } else {
+                                //already granted
+                                pickCamera();
+                            }
+
+                        } else {
+                            //gallery clicked
+                            if (!checkStoragePermission()) {
+                                //not granted, request
+                                requestStoragePermission();
+                            } else {
+                                //already granted
+                                pickGallery();
+                            }
+                        }
+                    }
+                })
+                .show();
+    }
+
+    private void pickGallery() {
+        //intent to pick image from gallery
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
+    }
+
+    private void pickCamera() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.TITLE, "GroupImageTitle");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "GroupImageDescription");
+
+        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
+    }
+
+    private void requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+
+        return result;
+    }
+
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
+    }
+
+    private boolean checkCameraPermission() {
+        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+
+        return result && result1;
     }
 
     private void loadMyGroup() {
@@ -256,5 +341,49 @@ public class GroupChatActivity extends AppCompatActivity {
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
+                //picked from gallery
+                image_uri = data.getData();
+
+            }
+            if (requestCode == IMAGE_PICK_CAMERA_CODE) {
+                //picked from camera
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CAMERA_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (cameraAccepted && writeStorageAccepted) {
+                        pickCamera();
+                    } else {
+                        Toast.makeText(this, "Camera & Storage permissions are required...", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case STORAGE_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (writeStorageAccepted) {
+                        pickGallery();
+                    } else {
+                        Toast.makeText(this, "Storage permission required...", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                break;
+        }
     }
 }
