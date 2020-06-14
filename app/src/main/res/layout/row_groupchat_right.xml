@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,7 +20,6 @@
 
     <TextView
         android:id="@+id/messageTv"
-        android:layout_below="@id/nameTv"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="5dp"
@@ -29,14 +28,20 @@
         android:text="The message"
         android:textColor="@color/colorBlack" />
 
+    <ImageView
+        android:id="@+id/messageIv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_image_black"/>
+
     <TextView
         android:id="@+id/timeTv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:textAlignment="textEnd"
         android:text="Time"
-        android:layout_below="@+id/messageTv"
         android:layout_marginEnd="5dp"
         android:textSize="12sp" />
 
-</RelativeLayout>
+</LinearLayout>
