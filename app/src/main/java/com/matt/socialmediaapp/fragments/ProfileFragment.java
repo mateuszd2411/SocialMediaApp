@@ -832,6 +832,7 @@ public class ProfileFragment extends Fragment {
         //hide some options
         menu.findItem(R.id.action_create_group).setVisible(false);
         menu.findItem(R.id.action_add_participant).setVisible(false);
+        menu.findItem(R.id.action_groupinfo).setVisible(false);
 
         MenuItem item = menu.findItem(R.id.action_search);
         //v7 searchView to search user specific posts
