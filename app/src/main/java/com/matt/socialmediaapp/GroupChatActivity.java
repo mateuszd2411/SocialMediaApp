@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,12 +30,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.matt.socialmediaapp.adapters.AdapterGroupChat;
 import com.matt.socialmediaapp.models.ModelGroupChat;
 import com.squareup.picasso.Picasso;
@@ -104,7 +109,7 @@ public class GroupChatActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         loadGroupInfo();
         loadGroupMessages();
-        loadMyGroup();
+        loadMyGroupRole();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,7 +212,75 @@ public class GroupChatActivity extends AppCompatActivity {
         return result && result1;
     }
 
-    private void loadMyGroup() {
+    private void sendImageMessage() {
+        //progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Sending Image...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        //file name and path in firebase storage
+        String filenamePath = "ChatImages/" + "" + System.currentTimeMillis();
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
+        //upload image
+        storageReference.putFile(image_uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //image upload, get url
+
+                        Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!p_uriTask.isSuccessful());
+                        Uri p_downloadUri = p_uriTask.getResult();
+
+                        if (p_uriTask.isSuccessful()) {
+                            //image url received, save in db
+
+                            //timestamp
+                            String timestamp = "" + System.currentTimeMillis();
+
+                            //setup message data
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("sender", "" + firebaseAuth.getUid());
+                            hashMap.put("message", "" + p_downloadUri);
+                            hashMap.put("timestamp", "" + timestamp);
+                            hashMap.put("type", "" + "image");   //text/image/file
+
+                            //add in db
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+                            ref.child(groupId).child("Messages").child(timestamp)
+                                    .setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            //message sent
+                                            messageEt.setText("");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                        }
+                        progressDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //failed uploading image
+                        Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void loadMyGroupRole() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
         ref.child(groupId).child("Participants")
                 .orderByChild("uid").equalTo(firebaseAuth.getUid())
@@ -350,10 +423,11 @@ public class GroupChatActivity extends AppCompatActivity {
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
                 //picked from gallery
                 image_uri = data.getData();
-
+                sendImageMessage();
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 //picked from camera
+                sendImageMessage();
             }
         }
     }
