@@ -2,9 +2,11 @@ package com.matt.socialmediaapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -75,6 +77,56 @@ public class GroupInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        leaveGroupTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if user is participant/admin: leave group
+                //if user is creator: delete group
+                String dialogTitle = "";
+                String dialogDescription = "";
+                String postiveButtonTitle = "";
+                if (myGroupRole.equals("creator")) {
+                    dialogTitle = "Delete Group";
+                    dialogDescription = "Are you sure you want to Leave group permanently?";
+                    postiveButtonTitle = "DELETE";
+                } else {
+                    dialogTitle = "Leave Group";
+                    dialogDescription = "Are you sure you want to Leave group permanently?";
+                    postiveButtonTitle = "LEAVE";
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupInfoActivity.this);
+                builder.setTitle(dialogTitle)
+                        .setMessage(dialogDescription)
+                        .setPositiveButton(postiveButtonTitle, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (myGroupRole.equals("creator")) {
+                                    //im creator of group: delete group
+                                    deleteGroup();
+                                } else {
+                                    //im participant/admin: leave group
+                                    leaveGroup();
+                                }
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                .show();
+            }
+        });
+    }
+
+    private void leaveGroup() {
+
+    }
+
+    private void deleteGroup() {
+
     }
 
     private void loadGroupInfo() {
