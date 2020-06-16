@@ -23,6 +23,7 @@
                 android:adjustViewBounds="true" />
 
             <TextView
+                android:id="@+id/descriptionTv"
                 android:background="#54000000"
                 android:text="The description of the group"
                 android:layout_width="match_parent"
@@ -35,6 +36,7 @@
                 android:background="#54000000"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="12sp"
                 android:text="Created by ABC, on dd/mm/yyyy"
                 android:layout_alignParentBottom="true"
                 android:padding="5dp"/>
@@ -63,7 +65,7 @@
             android:drawableTint="@color/colorBlack"
             android:gravity="center_vertical"
             android:drawablePadding="10dp"
-            android:id="@+id/addParticiantTv"
+            android:id="@+id/addParticipantTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Participant"
