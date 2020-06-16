@@ -81,6 +81,15 @@ public class GroupInfoActivity extends AppCompatActivity {
             }
         });
 
+        editGroupTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupInfoActivity.this, GroupEditActivity.class);
+                intent.putExtra("groupId", groupId);
+                startActivity(intent);
+            }
+        });
+
         leaveGroupTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
