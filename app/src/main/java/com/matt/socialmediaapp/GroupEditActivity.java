@@ -17,12 +17,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,9 +35,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class GroupEditActivity extends AppCompatActivity {
@@ -78,9 +86,13 @@ public class GroupEditActivity extends AppCompatActivity {
         groupIconIv = findViewById(R.id.groupIconIv);
         groupTitleEt = findViewById(R.id.groupTitleEt);
         groupDescriptionEt = findViewById(R.id.groupDescriptionEt);
-        updateGroupBtn = findViewById(R.id.createGroupBtn);
+        updateGroupBtn = findViewById(R.id.updateGroupBtn);
 
         groupId = getIntent().getStringExtra("groupId");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setCanceledOnTouchOutside(false);
 
         //init permissions arrays
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -108,7 +120,95 @@ public class GroupEditActivity extends AppCompatActivity {
     }
 
     private void startUpdatingGroup() {
+        //input data
+        final String groupTitle = groupTitleEt.getText().toString().trim();
+        final String groupDescription = groupDescriptionEt.getText().toString().trim();
+        //validate data
+        if (TextUtils.isEmpty(groupTitle)) {
+            Toast.makeText(this, "Group title is required...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        progressDialog.setMessage("Updating Group Info...");
+        progressDialog.show();
 
+        if (image_uri == null) {
+            //update group without icon
+
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("groupTitle", groupTitle);
+            hashMap.put("groupDescription", groupDescription);
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+            ref.child(groupId).updateChildren(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            //updated...
+                            progressDialog.dismiss();
+                            Toast.makeText(GroupEditActivity.this, "Group info updated...", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(GroupEditActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+        else {
+            //update froup with icon
+
+            String timestamp = "" + System.currentTimeMillis();
+
+            String filePathAndName = "Group_Imgs/" + "image" + "_" + timestamp;
+
+            //upload image to firebase storage
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathAndName);
+            storageReference.putFile(image_uri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //image uploaded
+                            //get url
+                            Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!p_uriTask.isSuccessful());
+                            Uri p_downloadUri = p_uriTask.getResult();
+                            if (p_uriTask.isSuccessful()) {
+
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("groupTitle", groupTitle);
+                                hashMap.put("groupDescription", groupDescription);
+                                hashMap.put("groupIcon", "" + p_downloadUri);
+
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+                                ref.child(groupId).updateChildren(hashMap)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                //updated...
+                                                progressDialog.dismiss();
+                                                Toast.makeText(GroupEditActivity.this, "Group info updated...", Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(GroupEditActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(GroupEditActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void loadGroupInfo() {
