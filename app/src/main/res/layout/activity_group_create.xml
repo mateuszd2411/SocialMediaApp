@@ -23,7 +23,7 @@
         android:layout_below="@+id/groupIconIv"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:hint="Group Title" />
+        android:hint="@string/group_title" />
 
     <EditText
         android:id="@+id/groupDescriptionEt"
@@ -36,7 +36,7 @@
         android:layout_below="@+id/groupTitleEt"
         android:layout_marginTop="10dp"
         android:padding="10dp"
-        android:hint="Group Description" />
+        android:hint="@string/group_description" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/createGroupBtn"

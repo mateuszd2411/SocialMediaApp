@@ -3,34 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_logout"
-        android:title="Logout"/>
+        android:title="@string/logout"/>
 
     <item android:id="@+id/action_settings"
-        android:title="Settings"/>
+        android:title="@string/settings"/>
 
     <item android:id="@+id/action_search"
-        android:title="Search"
+        android:title="@string/search"
         android:icon="@drawable/ic_search_white"
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item android:id="@+id/action_add_post"
-        android:title="Add Post"
+        android:title="@string/add_post"
         android:icon="@drawable/ic_add_white"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_create_group"
-        android:title="Create Group"
+        android:title="@string/create_group"
         android:icon="@drawable/ic_creategroup_white"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_add_participant"
-        android:title="Add Group Participant"
+        android:title="@string/add_group_participant"
         android:icon="@drawable/ic_addperson_white"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_groupinfo"
-        android:title="Group Info"
+        android:title="@string/group_info"
         android:icon="@drawable/ic_info_white"
         app:showAsAction="always" />
 

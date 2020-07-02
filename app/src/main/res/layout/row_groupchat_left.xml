@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/nameTv"
-        android:text="Name"
+        android:text="@string/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -24,7 +24,7 @@
         android:layout_marginStart="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The message"
+        android:text=""
         android:textColor="@color/colorBlack" />
 
     <ImageView
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:textAlignment="textEnd"
         android:layout_height="wrap_content"
-        android:text="Time"
+        android:text="@string/time"
         android:layout_marginEnd="5dp"
         android:textSize="12sp" />
 

@@ -6,4 +6,64 @@
     <string name="facebook_app_id">908987286286511</string>
     <string name="fb_login_protocol_scheme">fb908987286286511</string>
 
+    <!--    activity_add_post.xml-->
+    <string name="upload_post">Upload Post</string>
+    <string name="enter_title">Enter Title…</string>
+    <string name="enter_description">Enter description…</string>
+
+    <!--    activity_chat.xml-->
+    <string name="online">Online</string>
+    <string name="start_typing">Start typing</string>
+
+    <!--    activity_group_info.xml-->
+    <string name="group_title">Group Title</string>
+    <string name="group_description">Group Description</string>
+    <string name="the_description_of_the_group">The description of the group</string>
+    <string name="edit_group">Edit Group</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="leave_group">Leave Group</string>
+    <string name="participants_n">Participants (N)</string>
+
+    <!--    activity_login.xml-->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password_recovery">Forgot Password? Recovery</string>
+    <string name="no_have_account_register">No have account? Register</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+
+    <!--   activity_post_detail.xml -->
+    <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="like">LIKE</string>
+    <string name="share">SHARE</string>
+    <string name="comments">Comments</string>
+    <string name="enter_comment">Enter comment...</string>
+
+    <!--    -->
+    <string name="already_have_account_login">Already have account? Login</string>
+    <string name="post_notifications">Post Notifications</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="update_password">Update Password</string>
+    <string name="his_message">His message</string>
+    <string name="delivered">delivered</string>
+    <string name="his_name">His Name</string>
+    <string name="the_last_message">The last message</string>
+    <string name="this_is_actual_comment">This is actual comment</string>
+    <string name="time">Time</string>
+    <string name="notification">Notification</string>
+    <string name="logout">Logout</string>
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="add_post">Add Post</string>
+    <string name="create_group">Create Group</string>
+    <string name="add_group_participant">Add Group Participant</string>
+    <string name="group_info">Group Info</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="users">Users</string>
+    <string name="chats">Chats</string>
+    <string name="more">More</string>
+
 </resources>

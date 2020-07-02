@@ -32,7 +32,7 @@
                 android:id="@+id/nameTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Person Name"
+                android:text=""
                 android:textSize="18sp"
                 android:textColor="@color/colorBlack"/>
 
@@ -40,14 +40,14 @@
                 android:id="@+id/emailTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Person Email"
+                android:text=""
                 android:textColor="@color/colorBlack"/>
 
             <TextView
                 android:id="@+id/statusTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status" />
+                android:text="" />
 
         </LinearLayout>
 

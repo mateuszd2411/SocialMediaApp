@@ -23,7 +23,7 @@
             android:id="@+id/timeTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="02/03/2020 05:59PM"
+            android:text=""
             android:textColor="@color/colorBlack"
             android:textSize="12sp"/>
 
@@ -33,7 +33,7 @@
             android:textColor="@color/colorBlack"
             android:background="@drawable/bg_sender"
             android:padding="15dp"
-            android:text="His message"
+            android:text="@string/his_message"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/timeTv"
             android:layout_width="wrap_content"
@@ -61,6 +61,6 @@
         android:id="@+id/isSeenTv"
         android:gravity="end"
         android:textAlignment="textEnd"
-        android:text="delivered"/>
+        android:text="@string/delivered"/>
 
 </LinearLayout>

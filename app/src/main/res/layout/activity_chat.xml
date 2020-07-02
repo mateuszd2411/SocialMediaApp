@@ -50,7 +50,7 @@
                 android:id="@+id/userStatusTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Online"
+                android:text="@string/online"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -95,7 +95,7 @@
             android:id="@+id/messageEt"
             android:layout_weight="1"
             android:background="@null"
-            android:hint="Start typing"
+            android:hint="@string/start_typing"
             android:padding="15dp"
             android:inputType="textCapSentences|textMultiLine"
             android:layout_width="0dp"

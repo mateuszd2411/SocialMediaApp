@@ -36,7 +36,7 @@
 
                 <TextView
                     android:id="@+id/uNameTv"
-                    android:text="Name"
+                    android:text=""
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp"
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
 
                 <TextView
                     android:id="@+id/pTimeTv"
-                    android:text="33 min"
+                    android:text=""
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -66,11 +66,11 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:autoLink="all"
-            android:text="Title"/>
+            android:text=""/>
 
         <TextView
             android:id="@+id/pDescriptionTv"
-            android:text="The description of the post"
+            android:text=""
             android:textColor="@color/colorBlack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
 
             <TextView
                 android:id="@+id/pLikesTv"
-                android:text="1.2k Likes"
+                android:text=""
                 android:layout_weight="1"
                 android:textColor="@color/colorPrimary"
                 android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
 
             <TextView
                 android:id="@+id/pCommentsTv"
-                android:text="1.2k Comments"
+                android:text=""
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorPrimary"
@@ -126,7 +126,7 @@
                 android:drawableStart="@drawable/ic_like_black"
                 android:drawablePadding="5dp"
                 android:layout_weight="1"
-                android:text="LIKE"
+                android:text="@string/like"
                 android:background="@null"/>
 
             <Button
@@ -137,7 +137,7 @@
                 android:drawableLeft="@drawable/ic_comment_black"
                 android:drawableStart="@drawable/ic_comment_black"
                 android:drawablePadding="5dp"
-                android:text="COMMENT"
+                android:text="@string/comments"
                 android:background="@null"/>
 
             <Button
@@ -148,7 +148,7 @@
                 android:drawableStart="@drawable/ic_share_black"
                 android:drawablePadding="5dp"
                 android:layout_weight="1"
-                android:text="SHARE"
+                android:text="@string/share"
                 android:background="@null"/>
 
         </LinearLayout>

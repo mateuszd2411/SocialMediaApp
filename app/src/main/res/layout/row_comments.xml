@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/nameTv"
             android:layout_toRightOf="@+id/avatarIv"
-            android:text="Atif"
+            android:text=""
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -36,13 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/nameTv"
             android:layout_toEndOf="@+id/avatarIv"
-            android:text="This is actual comment"
+            android:text="@string/this_is_actual_comment"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/avatarIv" />
 
         <TextView
             android:id="@+id/timeTv"
-            android:text="12/12/2020"
+            android:text=""
             android:layout_below="@+id/commentTv"
             android:layout_toEndOf="@+id/avatarIv"
             android:layout_width="wrap_content"

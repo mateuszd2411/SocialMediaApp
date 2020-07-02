@@ -25,7 +25,7 @@
             <TextView
                 android:id="@+id/descriptionTv"
                 android:background="#54000000"
-                android:text="The description of the group"
+                android:text="@string/the_description_of_the_group"
                 android:layout_width="match_parent"
                 android:layout_above="@+id/createdByTv"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:text="Created by ABC, on dd/mm/yyyy"
+                android:text=""
                 android:layout_alignParentBottom="true"
                 android:padding="5dp"/>
 
@@ -51,7 +51,7 @@
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Group"
+            android:text="@string/edit_group"
             android:padding="5dp"
             android:textColor="@color/colorBlack"/>
 
@@ -68,7 +68,7 @@
             android:id="@+id/addParticipantTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Participant"
+            android:text="@string/add_participant"
             android:padding="5dp"
             android:textColor="@color/colorBlack"/>
 
@@ -85,7 +85,7 @@
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Leave Group"
+            android:text="@string/leave_group"
             android:padding="5dp"
             android:textColor="@color/colorBlack"/>
 
@@ -102,7 +102,7 @@
             android:drawablePadding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Participants (N)"
+            android:text="@string/participants_n"
             android:padding="5dp"
             android:textColor="@color/colorBlack"/>
 
