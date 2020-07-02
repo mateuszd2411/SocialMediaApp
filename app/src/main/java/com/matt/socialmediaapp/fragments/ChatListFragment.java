@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -214,6 +215,7 @@ public class ChatListFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
             firebaseAuth.signOut();
+            LoginManager.getInstance().logOut();
             checkUserStatus();
         }
         else if (id == R.id.action_settings) {

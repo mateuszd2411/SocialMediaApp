@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -874,7 +875,9 @@ public class ProfileFragment extends Fragment {
         //get item id
         int id = item.getItemId();
         if (id == R.id.action_logout) {
+            Intent intent = new Intent(getActivity(), HomeFragment.class);
             firebaseAuth.signOut();
+            LoginManager.getInstance().logOut();
             checkUserStatus();
         }
         else if (id == R.id.action_add_post) {
