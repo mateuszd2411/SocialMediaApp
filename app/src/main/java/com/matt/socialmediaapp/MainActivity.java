@@ -27,7 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     //views
-    Button mRegisterBtn, mLoginBtn;
+    Button mRegisterBtn, mLoginBtn, changeLang;
 
     //facebook login
     private CallbackManager mCallbackManager;
@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         //init views
         mRegisterBtn = findViewById(R.id.register_btn);
         mLoginBtn = findViewById(R.id.login_btn);
+        changeLang = findViewById(R.id.change_language);
 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
@@ -86,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
+
+        //For change language
+        changeLang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //show alert dialog to display list of language, one can be selected
+                showChangeLanguageDialog();
+            }
+        });
+
+    }   // onCreate END
+
+    //For change language
+    private void showChangeLanguageDialog() {
 
     }
 

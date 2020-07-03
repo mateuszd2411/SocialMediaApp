@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SocialMediaApp</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">908987286286511</string>
+    <string name="fb_login_protocol_scheme">fb908987286286511</string>
+
+    <!--    activity_add_post.xml-->
+    <string name="upload_post">Prześlij Post</string>
+    <string name="enter_title">Wpisz tytuł…</string>
+    <string name="enter_description">Wpisz opis…</string>
+
+    <!--    activity_chat.xml-->
+    <string name="online">Dostępny</string>
+    <string name="start_typing">Zacznij pisać</string>
+
+    <!--    activity_group_info.xml-->
+    <string name="group_title">Nazwa Grupy</string>
+    <string name="group_description">Opis grupy</string>
+    <string name="the_description_of_the_group">Opis grupy</string>
+    <string name="edit_group">Edytuj Grupę</string>
+    <string name="add_participant">Dodaj Członka</string>
+    <string name="leave_group">Opuść grupę</string>
+    <string name="participants_n">Ułonkowie</string>
+
+    <!--    activity_login.xml-->
+    <string name="email">Email</string>
+    <string name="password">Hasło</string>
+    <string name="forgot_password_recovery">Zapomniałeś hasła? Odzyskiwanie hasła</string>
+    <string name="no_have_account_register">Nie masz konta? Zarejestruj się</string>
+    <string name="register">Zarejestruj się</string>
+    <string name="login">Zaloguj się</string>
+
+    <!--   activity_post_detail.xml -->
+    <string name="name">Imię</string>
+    <string name="title">Tytuł</string>
+    <string name="like">Lubię to</string>
+    <string name="share">Udostępnij</string>
+    <string name="comments">Komentarze</string>
+    <string name="enter_comment">Dodaj komentarz…</string>
+
+    <!--    -->
+    <string name="already_have_account_login">Masz już konto? Zaloguj się</string>
+    <string name="post_notifications">Powiadomienia</string>
+    <string name="current_password">Obecne hasło</string>
+    <string name="new_password">Nowe hasło</string>
+    <string name="update_password">Zaktualizuj hasło</string>
+    <string name="his_message">jego wiadomość</string>
+    <string name="delivered">dostarczone </string>
+    <string name="his_name">jego imie</string>
+    <string name="the_last_message">ostatnia wiadomość</string>
+    <string name="this_is_actual_comment">komentarz</string>
+    <string name="time">Czas</string>
+    <string name="notification">Powiadomienia</string>
+    <string name="logout">Wyloguj się</string>
+    <string name="settings">Ustawienia</string>
+    <string name="search">Szukaj</string>
+    <string name="add_post">Dodaj Post</string>
+    <string name="create_group">Utwórz grupę</string>
+    <string name="add_group_participant">Dodaj członka do Grupy</string>
+    <string name="group_info">Info</string>
+    <string name="home">Główna</string>
+    <string name="profile">Progil</string>
+    <string name="users">Urzytkownicy</string>
+    <string name="chats">Czaty </string>
+    <string name="more">Więcej</string>
+    <string name="change_language">Zmień język</string>
+</resources>
