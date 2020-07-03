@@ -22,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-
         android:layout_above="@+id/register_btn"
         android:layout_marginBottom="0dp" />
 
@@ -55,7 +54,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:background="@color/colorPrimary"
-        android:text="@string/change_language" />
+        android:text="@string/change_language"
+        android:textColor="?attr/textColor"/>
 
 
 

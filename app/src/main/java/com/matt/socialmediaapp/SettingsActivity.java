@@ -3,8 +3,10 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.CompoundButton;
@@ -16,6 +18,10 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    ////////////////////////////////////////////For Dark Theme
+    SwitchCompat darkModeSwitch;
+
+    ////////////////////////////////////////////For Notifications
     SwitchCompat postSwitch;
 
     //use shared preferences to save the state of Switch
@@ -24,17 +30,50 @@ public class SettingsActivity extends AppCompatActivity {
 
     //constant for topic
     private static final String TOPIC_POST_NOTIFICATION = "POST";   //assign any value but use same for this kind of notification
-
+    ////////////////////////////////////////////For Notifications
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ////////////////////////////////////////////For Dark Theme
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darkTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
+        ////////////////////////////////////////////For Dark Theme
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        darkModeSwitch = findViewById(R.id.darkModeSwitch);
+
+        //validation for switching to dark mode theme
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            darkModeSwitch.setChecked(true);
+        }
+
+        darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    restartApp();
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    restartApp();
+                }
+            }
+        });
+
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Settings");
+        assert actionBar != null;
+        actionBar.setTitle(R.string.SettingsTitle);
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        ////////////////////////////////////////////For Notifications
         postSwitch = findViewById(R.id.postSwitch);
 
         //init sp
@@ -63,8 +102,21 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+        ////////////////////////////////////////////For Notifications
+
+
+
+
     }
 
+    ////////////////////////////////////////////For Dark Theme
+    private void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    ////////////////////////////////////////////For Notifications
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -100,4 +152,5 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
     }
+    ////////////////////////////////////////////For Notifications
 }

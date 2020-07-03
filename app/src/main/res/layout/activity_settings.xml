@@ -4,18 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity">
+    android:background="?attr/backgroundColor"
+    tools:context=".SettingsActivity"
+    >
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentPadding="10dp">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/postSwitch"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/post_notifications" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="?attr/cardBackground"
+            android:padding="10dp">
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/postSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/post_notifications"
+                android:textColor="?attr/textColor" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/darkModeSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/night_mode"
+                android:textColor="?attr/textColor" />
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

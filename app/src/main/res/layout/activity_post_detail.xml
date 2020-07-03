@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostDetailActivity">
+    tools:context=".PostDetailActivity"
+    android:background="?attr/background">
 
     <androidx.core.widget.NestedScrollView
         android:layout_above="@+id/commentsLayout"
@@ -15,7 +16,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="?attr/cardBackground">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

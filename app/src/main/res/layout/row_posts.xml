@@ -7,12 +7,13 @@
     app:cardElevation="3dp"
     app:contentPadding="5dp"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="@color/colorWhite">
+    app:cardBackgroundColor="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="?attr/cardBackground">
 
         <LinearLayout
             android:id="@+id/profileLayout"
@@ -37,7 +38,7 @@
                 <TextView
                     android:id="@+id/uNameTv"
                     android:text=""
-                    android:textColor="@color/colorBlack"
+                    android:textColor="?attr/textColor"
                     android:textSize="20sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -45,6 +46,7 @@
                 <TextView
                     android:id="@+id/pTimeTv"
                     android:text=""
+                    android:textColor="?attr/textColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -64,6 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:textColor="?attr/textColor"
             android:textStyle="bold"
             android:autoLink="all"
             android:text=""/>
@@ -71,7 +74,7 @@
         <TextView
             android:id="@+id/pDescriptionTv"
             android:text=""
-            android:textColor="@color/colorBlack"
+            android:textColor="?attr/textColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"/>
@@ -91,7 +94,7 @@
                 android:id="@+id/pLikesTv"
                 android:text=""
                 android:layout_weight="1"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -126,6 +129,7 @@
                 android:drawableStart="@drawable/ic_like_black"
                 android:drawablePadding="5dp"
                 android:layout_weight="1"
+                android:textColor="?attr/textColor"
                 android:text="@string/like"
                 android:background="@null"/>
 
@@ -137,6 +141,7 @@
                 android:drawableLeft="@drawable/ic_comment_black"
                 android:drawableStart="@drawable/ic_comment_black"
                 android:drawablePadding="5dp"
+                android:textColor="?attr/textColor"
                 android:text="@string/comments"
                 android:background="@null"/>
 
@@ -148,6 +153,7 @@
                 android:drawableStart="@drawable/ic_share_black"
                 android:drawablePadding="5dp"
                 android:layout_weight="1"
+                android:textColor="?attr/textColor"
                 android:text="@string/share"
                 android:background="@null"/>
 
