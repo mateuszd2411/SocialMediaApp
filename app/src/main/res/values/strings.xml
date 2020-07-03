@@ -69,5 +69,22 @@
     <string name="night_mode">Enable Night Mode</string>
     <string name="SettingsTitle">Settings</string>
     <string name="PostDetail">Post Detail</string>
+    <string name="Profile">Profile</string>
+    <string name="Home">Home</string>
+    <string name="Users">Users</string>
+    <string name="Chat">Chat</string>
+    <string name="GroupChats">Group Chats</string>
+    <string name="AddNewPost">Add New Post</string>
+    <string name="UpdatePost">Update Post</string>
+    <string name="Update">Update</string>
+    <string name="UpdatingPost">Updating Post...</string>
+    <string name="Updated">Updated...</string>
+    <string name="PublishingPost">Publishing post...</string>
+    <string name="PostPublished">Post published</string>
+    <string name="Camera">Camera</string>
+    <string name="Gallery">Gallery</string>
+    <string name="ChooseImagefrom">Choose Image from</string>
+    <string name="PermissionMessageCameraStorage"><![CDATA[Camera & Storage both permissions are necessary]]></string>
+    <string name="PermissionMessageStorage">Storage permissions is necessary</string>
 
 </resources>

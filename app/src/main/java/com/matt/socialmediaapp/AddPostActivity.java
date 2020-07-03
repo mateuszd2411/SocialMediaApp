@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -93,6 +94,7 @@ public class AddPostActivity extends AppCompatActivity {
     //progress bar
     ProgressDialog pd;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ////////////////////////////////////////////For Dark Theme
@@ -108,7 +110,8 @@ public class AddPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_post);
 
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Add New Post");
+        assert actionBar != null;
+        actionBar.setTitle(R.string.AddNewPost);
         //enable back button in actionbar
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -149,13 +152,13 @@ public class AddPostActivity extends AppCompatActivity {
         //validate if we came here to update post i.e came from AdapterPost
         if (isUpdateKey.equals("editPost")) {
             //update
-            actionBar.setTitle("Update Post");
-            uploadBtn.setText("Update");
+            actionBar.setTitle(R.string.UpdatePost);
+            uploadBtn.setText(R.string.Update);
             loadPostData(editPostId);
         } else {
             //add
-            actionBar.setTitle("Add New Post");
-            uploadBtn.setText("Upload");
+            actionBar.setTitle(R.string.AddNewPost);
+            uploadBtn.setText(R.string.Update);
         }
 
         actionBar.setSubtitle(email);
@@ -233,7 +236,7 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void beginUpdate(String title, String description, String editPostId) {
-        pd.setMessage("Updating Post...");
+        pd.setMessage(getString(R.string.UpdatingPost));
         pd.show();
 
         if (!editImage.equals("noImage")) {
@@ -266,7 +269,7 @@ public class AddPostActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         pd.dismiss();
-                        Toast.makeText(AddPostActivity.this, "Updated...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddPostActivity.this, R.string.Updated, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -320,7 +323,7 @@ public class AddPostActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             pd.dismiss();
-                                            Toast.makeText(AddPostActivity.this, "Updated...", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(AddPostActivity.this, R.string.Updated, Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -392,7 +395,7 @@ public class AddPostActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             pd.dismiss();
-                                                            Toast.makeText(AddPostActivity.this, "Updated...", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(AddPostActivity.this, R.string.Updated, Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -458,7 +461,7 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void uploadData(final String title, final String description) {
-        pd.setMessage("Publishing post...");
+        pd.setMessage(getString(R.string.PublishingPost));
         pd.show();
 
         //for post-image name, post-id, post-publish-time
@@ -513,7 +516,7 @@ public class AddPostActivity extends AppCompatActivity {
                                             public void onSuccess(Void aVoid) {
                                                 //added in database
                                                 pd.dismiss();
-                                                Toast.makeText(AddPostActivity.this, "Post published", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddPostActivity.this, R.string.PostPublished, Toast.LENGTH_SHORT).show();
                                                 //reset views
                                                 titleEt.setText("");
                                                 descriptionEt.setText("");
@@ -584,7 +587,7 @@ public class AddPostActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             //added in database
                             pd.dismiss();
-                            Toast.makeText(AddPostActivity.this, "Post published", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddPostActivity.this, R.string.PostPublished, Toast.LENGTH_SHORT).show();
                             //reset views
                             titleEt.setText("");
                             descriptionEt.setText("");
@@ -664,11 +667,11 @@ public class AddPostActivity extends AppCompatActivity {
 
     private void showImagePickDialog() {
         //options(camera, gallery) to show in dialog
-        String[] options = {"Camera", "Gallery"};
+        String[] options = {getString(R.string.Camera), getString(R.string.Gallery)};
 
         //dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose Image from");
+        builder.setTitle(R.string.ChooseImagefrom);
         //set options to dialog
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -814,7 +817,7 @@ public class AddPostActivity extends AppCompatActivity {
                         //both permission are granted
                         pickFromCamera();
                     } else {
-                        Toast.makeText(this, "Camera & Storage both permissions are necessary", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.PermissionMessageCameraStorage, Toast.LENGTH_SHORT).show();
                     }
                 } else {
 
@@ -828,7 +831,7 @@ public class AddPostActivity extends AppCompatActivity {
                         //storage permission granted
                         pickFromGallery();
                     } else {
-                        Toast.makeText(this, "Storage permissions is necessary", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.PermissionMessageStorage, Toast.LENGTH_SHORT).show();
                     }
                 } else {
 

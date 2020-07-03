@@ -70,4 +70,22 @@
     <string name="night_mode">Ciemny motyw</string>
     <string name="SettingsTitle">Ustawienia</string>
     <string name="PostDetail">Szczegóły</string>
+    <string name="Profile">Profil</string>
+    <string name="Home">Główna</string>
+    <string name="Users">Urzytkownicy</string>
+    <string name="Chat">Czat</string>
+    <string name="GroupChats">Czat Grupa</string>
+    <string name="AddNewPost">Dodaj Post</string>
+    <string name="UpdatePost">Aktualizuj Post</string>
+    <string name="Update">Aktualizuj</string>
+    <string name="UpdatingPost">Aktualizuje Post…</string>
+    <string name="Updated">Zaktualizowany…</string>
+    <string name="PublishingPost">Publikuję…</string>
+    <string name="PostPublished">Opublikowano…</string>
+    <string name="Camera">Kamera</string>
+    <string name="Gallery">Galeria</string>
+    <string name="ChooseImagefrom">Wybierz obraz z: </string>
+    <string name="PermissionMessageCameraStorage"><![CDATA[Kamera & Storage zezwolenia są wymagane]]></string>
+    <string name="PermissionMessageStorage">Storage zezwolenie jest wymagane</string>
+
 </resources>
