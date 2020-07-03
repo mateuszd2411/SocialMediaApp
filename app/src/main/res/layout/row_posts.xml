@@ -83,7 +83,7 @@
             android:id="@+id/pImageIv"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/colorWhite"/>
+            android:background="?attr/backgroundColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                 android:id="@+id/pLikesTv"
                 android:text=""
                 android:layout_weight="1"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -103,7 +103,7 @@
                 android:text=""
                 android:layout_weight="1"
                 android:textAlignment="textEnd"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/textColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end" />
@@ -119,6 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="?attr/buttonColor"
             android:gravity="center">
 
             <Button

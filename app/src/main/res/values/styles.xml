@@ -6,10 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="backgroundColor">#A81010</item>
-        <item name="cardBackground">#B1B9BA</item>
+
+        <item name="backgroundColor">@color/colorWhite</item>
+        <item name="cardBackground">@color/colorCard</item>
+
         <item name="textColor">@color/colorBlack</item>
-        <item name="tintColor">#655C5C</item>
+        <item name="textHintColor">@color/colorGray</item>
+
+        <item name="tintColor">@color/colorTint</item>
         <item name="buttonColor">@color/colorAccent</item>
     </style>
 
@@ -20,9 +24,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="backgroundColor">@color/colorBlack</item>
-        <item name="cardBackground">#3B358F</item>
+        <item name="cardBackground">@color/colorCardDark</item>
         <item name="textColor">@color/colorWhite</item>
-        <item name="tintColor">@color/colorPrimary</item>
+        <item name="tintColor">@color/colorTintDark</item>
         <item name="buttonColor">@color/colorAccent</item>
     </style>
 

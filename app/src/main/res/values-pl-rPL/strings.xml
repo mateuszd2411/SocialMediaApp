@@ -69,4 +69,5 @@
     <string name="change_language">Zmień język</string>
     <string name="night_mode">Ciemny motyw</string>
     <string name="SettingsTitle">Ustawienia</string>
+    <string name="PostDetail">Szczegóły</string>
 </resources>

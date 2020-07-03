@@ -3,6 +3,7 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -43,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ////////////////////////////////////////////For Dark Theme
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darkTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
+        ////////////////////////////////////////////For Dark Theme
         super.onCreate(savedInstanceState);
         loadLocale();
         setContentView(R.layout.activity_main);

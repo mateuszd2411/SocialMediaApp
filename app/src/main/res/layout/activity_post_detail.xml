@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostDetailActivity"
-    android:background="?attr/background">
+    tools:context=".PostDetailActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_above="@+id/commentsLayout"
@@ -26,7 +25,7 @@
                 app:cardElevation="3dp"
                 app:contentPadding="5dp"
                 app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="@color/colorWhite">
+                app:cardBackgroundColor="?attr/cardBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,7 +98,7 @@
                         android:id="@+id/pImageIv"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:background="@color/colorWhite"/>
+                        android:background="?attr/backgroundColor"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -110,7 +109,7 @@
                             android:id="@+id/pLikesTv"
                             android:text=""
                             android:layout_weight="1"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="?attr/textColor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
@@ -119,7 +118,7 @@
                             android:text=""
                             android:layout_weight="1"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="?attr/textColor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="end" />
@@ -146,7 +145,9 @@
                             android:drawablePadding="5dp"
                             android:layout_weight="1"
                             android:text="@string/like"
-                            android:background="@null"/>
+                            android:padding="10dp"
+                            android:textColor="?attr/textColor"
+                            android:background="?attr/buttonColor"/>
 
                         <Button
                             android:id="@+id/shareBtn"
@@ -157,7 +158,9 @@
                             android:drawablePadding="5dp"
                             android:layout_weight="1"
                             android:text="@string/share"
-                            android:background="@null"/>
+                            android:padding="10dp"
+                            android:textColor="?attr/textColor"
+                            android:background="?attr/buttonColor"/>
 
                     </LinearLayout>
 
@@ -167,7 +170,8 @@
 
             <TextView
                 android:text="@string/comments"
-                android:textColor="@color/colorBlack"
+                android:textColor="?attr/textColor"
+                android:background="?attr/cardBackground"
                 android:drawableStart="@drawable/ic_comments_black"
                 android:drawablePadding="5dp"
                 android:padding="2dp"
@@ -176,6 +180,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
+                android:background="?attr/cardBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

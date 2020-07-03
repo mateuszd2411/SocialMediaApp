@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".AddPostActivity">
 
     <LinearLayout
@@ -20,15 +21,14 @@
             android:layout_marginBottom="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/textColor"
-            android:background="@color/colorPrimary"/>
+            android:background="?attr/buttonColor"/>
 
         <EditText
             android:id="@+id/pTitleEt"
-            android:background="@drawable/edittextstyle"
+            android:textColor="?attr/textHintColor"
+            android:background="?attr/cardBackground"
             android:padding="10dp"
             android:hint="@string/enter_title"
-            android:textColor="?attr/textColor"
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -37,20 +37,21 @@
             android:id="@+id/pImageIv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
+            android:background="?attr/backgroundColor"
             android:minHeight="200dp"/>
 
         <EditText
             android:id="@+id/pDescriptionEt"
-            android:background="@drawable/edittextstyle"
+            android:textColor="?attr/textHintColor"
+            android:background="?attr/cardBackground"
             android:padding="10dp"
             android:hint="@string/enter_description"
-            android:textColor="?attr/textColor"
             android:inputType="textCapSentences|textMultiLine"
             android:minHeight="120dp"
             android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-
 
     </LinearLayout>
 

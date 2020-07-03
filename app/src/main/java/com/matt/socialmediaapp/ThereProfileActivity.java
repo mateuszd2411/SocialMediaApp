@@ -3,6 +3,7 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +49,15 @@ public class ThereProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ////////////////////////////////////////////For Dark Theme
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darkTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
+        ////////////////////////////////////////////For Dark Theme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_there_profile);
 
@@ -93,7 +103,7 @@ public class ThereProfileActivity extends AppCompatActivity {
                         Picasso.get().load(image).into(avatarIv);
                     } catch (Exception e) {
                         //if there is any exception while getting image then set default
-                        Picasso.get().load(R.drawable.ic_add_image).into(avatarIv);
+                        Picasso.get().load(R.drawable.ic_add_white).into(avatarIv);
                     }
 
                     try {

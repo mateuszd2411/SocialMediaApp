@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1EDED"
+    android:background="?attr/backgroundColor"
     tools:context=".GroupChatActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -46,6 +46,7 @@
         android:id="@+id/chatRv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/backgroundColor"
         android:layout_below="@+id/toolbar"
         app:stackFromEnd="true"
         android:layout_above="@+id/chatLayout"

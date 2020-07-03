@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1EDED"
+    android:background="?attr/backgroundColor"
     tools:context=".fragments.ProfileFragment">
 
     <ScrollView
@@ -51,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#7700">
+                    android:background="?attr/cardBackground">
 
                     <TextView
                         android:id="@+id/nameTv"
@@ -60,7 +60,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
                         android:textSize="25sp"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="?attr/textColor"
                         android:layout_marginLeft="5dp" />
 
                     <TextView
@@ -68,7 +68,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="?attr/textColor"
                         android:layout_marginLeft="5dp" />
 
                     <TextView
@@ -76,7 +76,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="?attr/textColor"
                         android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
@@ -87,6 +87,7 @@
                 android:id="@+id/recyclerview_posts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?attr/cardBackground"
                 android:layout_below="@+id/linearLayout"/>
 
         </RelativeLayout>

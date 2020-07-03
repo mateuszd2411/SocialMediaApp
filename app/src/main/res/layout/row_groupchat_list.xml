@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    app:cardBackgroundColor="@color/colorWhite"
+    app:cardBackgroundColor="?attr/backgroundColor"
     app:contentPadding="3dp"
     android:layout_height="wrap_content">
 
@@ -26,7 +26,7 @@
             android:text="@string/group_title"
             android:layout_toEndOf="@+id/groupIconIv"
             android:textSize="18sp"
-            android:textColor="@color/colorBlack" />
+            android:textColor="?attr/textColor" />
 
         <TextView
             android:id="@+id/nameTv"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text=""
-            android:textColor="@color/colorBlack" />
+            android:textColor="?attr/textColor" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,6 +45,7 @@
             android:layout_below="@id/groupTitleTv"
             android:layout_toEndOf="@id/nameTv"
             android:text=""
+            android:textColor="?attr/textColor"
             android:layout_marginStart="5dp"
             android:singleLine="true" />
 
@@ -56,6 +57,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
             android:text=""
+            android:textColor="?attr/textColor"
             android:singleLine="true" />
 
     </RelativeLayout>

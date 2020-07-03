@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
+    android:background="?attr/backgroundColor"
     android:id="@+id/messageLayout">
 
     <RelativeLayout
@@ -61,6 +62,7 @@
         android:id="@+id/isSeenTv"
         android:gravity="end"
         android:textAlignment="textEnd"
-        android:text="@string/delivered"/>
+        android:text="@string/delivered"
+        android:textColor="?attr/textColor"/>
 
 </LinearLayout>

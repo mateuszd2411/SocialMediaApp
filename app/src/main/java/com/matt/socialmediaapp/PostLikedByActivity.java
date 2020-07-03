@@ -3,6 +3,7 @@ package com.matt.socialmediaapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -33,6 +34,15 @@ public class PostLikedByActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ////////////////////////////////////////////For Dark Theme
+
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darkTheme);
+        } else {
+            setTheme(R.style.AppTheme);
+        }
+
+        ////////////////////////////////////////////For Dark Theme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_liked_by);
 

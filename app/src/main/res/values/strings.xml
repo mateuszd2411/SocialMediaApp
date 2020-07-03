@@ -68,5 +68,6 @@
     <string name="change_language">Change Language</string>
     <string name="night_mode">Enable Night Mode</string>
     <string name="SettingsTitle">Settings</string>
+    <string name="PostDetail">Post Detail</string>
 
 </resources>

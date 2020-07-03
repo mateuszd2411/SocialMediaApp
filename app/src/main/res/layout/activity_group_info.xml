@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/backgroundColor"
     tools:context=".GroupInfoActivity">
 
     <LinearLayout
@@ -53,12 +54,12 @@
             android:layout_height="wrap_content"
             android:text="@string/edit_group"
             android:padding="5dp"
-            android:textColor="@color/colorBlack"/>
+            android:textColor="?attr/textColor"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#eee" />
+            android:background="?attr/tintColor" />
 
         <TextView
             android:drawableStart="@drawable/ic_addperson_white"
@@ -70,12 +71,12 @@
             android:layout_height="wrap_content"
             android:text="@string/add_participant"
             android:padding="5dp"
-            android:textColor="@color/colorBlack"/>
+            android:textColor="?attr/textColor"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#eee" />
+            android:background="?attr/tintColor" />
 
         <TextView
             android:id="@+id/leaveGroupTv"
@@ -87,12 +88,12 @@
             android:layout_height="wrap_content"
             android:text="@string/leave_group"
             android:padding="5dp"
-            android:textColor="@color/colorBlack"/>
+            android:textColor="?attr/textColor"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#eee" />
+            android:background="?attr/tintColor" />
 
         <TextView
             android:id="@+id/participantsTv"
@@ -104,12 +105,12 @@
             android:layout_height="wrap_content"
             android:text="@string/participants_n"
             android:padding="5dp"
-            android:textColor="@color/colorBlack"/>
+            android:textColor="?attr/textColor"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#eee" />
+            android:background="?attr/tintColor" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/participantsRv"
