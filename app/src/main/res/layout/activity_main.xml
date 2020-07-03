@@ -8,44 +8,54 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/logo"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_above="@+id/login_fb_button"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
         android:src="@drawable/firebase_logo" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_fb_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
         android:layout_above="@+id/register_btn"
-        android:layout_alignStart="@+id/register_btn"
-        android:layout_alignEnd="@+id/register_btn"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="0dp" />
 
     <Button
         android:id="@+id/register_btn"
-        android:text="@string/register"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/login_btn"/>
+        android:layout_marginTop="7dp"
+        android:layout_above="@+id/login_btn"
+        android:layout_marginBottom="0dp"
+        android:text="@string/register" />
 
     <Button
         android:id="@+id/login_btn"
-        android:text="@string/login"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
         style="@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/change_language"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/login" />
 
+    <Button
+        android:id="@+id/change_language"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/change_language" />
 
 
 

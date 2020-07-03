@@ -65,5 +65,6 @@
     <string name="users">Users</string>
     <string name="chats">Chats</string>
     <string name="more">More</string>
+    <string name="change_language">Change Language</string>
 
 </resources>
