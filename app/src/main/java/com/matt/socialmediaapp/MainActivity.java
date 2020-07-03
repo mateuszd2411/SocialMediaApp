@@ -57,6 +57,31 @@ public class MainActivity extends AppCompatActivity {
         loadLocale();
         setContentView(R.layout.activity_main);
 
+        ///////////////////////////////////////Shortcut
+        Intent target = new Intent(getApplicationContext(), DashboardActivity.class);
+
+        Intent shout = new Intent();
+        shout.putExtra(Intent.EXTRA_SHORTCUT_INTENT, target);
+        shout.putExtra(Intent.EXTRA_SHORTCUT_NAME, R.string.app_name);
+        shout.putExtra(Intent.EXTRA_SHORTCUT_ICON, R.mipmap.ic_launcher);
+
+        shout.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+
+        getApplicationContext().sendBroadcast(shout);
+
+        //where this is a context (e.g. your current activity)
+        final Intent shortcutIntent = new Intent(this, MainActivity.class);
+
+        final Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+        // Sets the custom shortcut's title
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
+        // Set the custom shortcut icon
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher));
+        // add the shortcut
+        intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        sendBroadcast(intent);
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
