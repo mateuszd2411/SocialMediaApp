@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
         //load language saved in share preferences
-        public void loadLocale() {
+        private void loadLocale() {
             SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
             String language = prefs.getString("My_Lang", "");
             setLocale(language);
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.Successful, Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
         startActivity(intent);

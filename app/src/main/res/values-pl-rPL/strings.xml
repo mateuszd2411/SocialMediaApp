@@ -87,5 +87,9 @@
     <string name="ChooseImagefrom">Wybierz obraz z: </string>
     <string name="PermissionMessageCameraStorage"><![CDATA[Kamera & Storage zezwolenia są wymagane]]></string>
     <string name="PermissionMessageStorage">Storage zezwolenie jest wymagane</string>
+    <string name="Successful">Pomyślnie</string>
+    <string name="receivepostnotifications">Będziesz otrzymywał powaidomienia</string>
+    <string name="Subscribefailed">Coś poszło nie tak…</string>
+    <string name="postNotificationsMsg">Nie będziesz otrzymywał powaidomień</string>
 
 </resources>

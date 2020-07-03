@@ -158,7 +158,7 @@ public class AddPostActivity extends AppCompatActivity {
         } else {
             //add
             actionBar.setTitle(R.string.AddNewPost);
-            uploadBtn.setText(R.string.Update);
+            uploadBtn.setText(R.string.AddNewPost);
         }
 
         actionBar.setSubtitle(email);

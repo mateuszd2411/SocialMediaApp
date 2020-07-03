@@ -86,5 +86,9 @@
     <string name="ChooseImagefrom">Choose Image from</string>
     <string name="PermissionMessageCameraStorage"><![CDATA[Camera & Storage both permissions are necessary]]></string>
     <string name="PermissionMessageStorage">Storage permissions is necessary</string>
+    <string name="Successful">Successful</string>
+    <string name="receivepostnotifications">You will receive post notifications</string>
+    <string name="Subscribefailed">Subscribe failed</string>
+    <string name="postNotificationsMsg">You will not receive post notifications</string>
 
 </resources>
