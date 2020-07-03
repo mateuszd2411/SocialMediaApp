@@ -1,9 +1,14 @@
 package com.matt.socialmediaapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +29,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     //views
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_main);
 
         // Initialize Firebase Auth
@@ -101,8 +109,53 @@ public class MainActivity extends AppCompatActivity {
 
     //For change language
     private void showChangeLanguageDialog() {
+        //array of language to display in alert dialog
+        final String[] listItems = {"Polski", "English"};
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Choose Language...");
+        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0) {
+                    //Polski
+                    setLocale("pl");
+                    recreate();
+                }
+                if (i == 1) {
+                    //English
+                    setLocale("en");
+                    recreate();
+                }
+
+                //dismiss alert dialog when language selected
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog mDialog = builder.create();
+        builder.show();
     }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getBaseContext().getResources().updateConfiguration(configuration, getBaseContext().getResources().getDisplayMetrics());
+
+        //save data to share preferences
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
+
+        //load language saved in share preferences
+        public void loadLocale() {
+            SharedPreferences prefs = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+            String language = prefs.getString("My_Lang", "");
+            setLocale(language);
+        }
 
     @Override
     public void onStart() {
