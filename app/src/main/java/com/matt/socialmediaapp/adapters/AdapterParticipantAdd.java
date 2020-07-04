@@ -89,11 +89,11 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                     String[] options;
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Choose Option");
+                                    builder.setTitle(R.string.ChooseOption);
                                     if (myGroupRole.equals("creator")) {
                                         if (hisPreviousRole.equals("admin")) {
                                             //im creator, he is admin
-                                            options = new String[]{"Remove Admin", "Remove User"};
+                                            options = new String[]{context.getString(R.string.RemoveAdmin), context.getString(R.string.RemoveUser)};
                                             builder.setItems(options, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -110,7 +110,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                         }
                                         else if (hisPreviousRole.equals("participant")) {
                                             //im creator, he is participant
-                                            options = new String[]{"Make Admin", "Remove User"};
+                                            options = new String[]{context.getString(R.string.MakeAdmin), context.getString(R.string.RemoveUser)};
                                             builder.setItems(options, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -129,11 +129,11 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                     else if (myGroupRole.equals("admin")) {
                                         if (hisPreviousRole.equals("creator")) {
                                             //im admin, he is creator
-                                            Toast.makeText(context, "Creator of Group...", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, R.string.CreatorofGroup, Toast.LENGTH_SHORT).show();
                                         }
                                         else if (hisPreviousRole.equals("admin")) {
                                             //im admin, he is admin too
-                                            options = new String[]{"Remove Admin", "Remove User"};
+                                            options = new String[]{context.getString(R.string.RemoveAdmin), context.getString(R.string.RemoveUser)};
                                             builder.setItems(options, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -150,7 +150,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                         }
                                         else if (hisPreviousRole.equals("participant")) {
                                             //im admin, he is participant
-                                            options = new String[]{"Make Admin", "Remove User"};
+                                            options = new String[]{context.getString(R.string.MakeAdmin), context.getString(R.string.RemoveUser)};
                                             builder.setItems(options, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -170,16 +170,16 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                 else {
                                     //user doesn't exists/not-participant: add
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Add Participant")
-                                            .setMessage("Add this user in this group?")
-                                            .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
+                                    builder.setTitle(R.string.AddParticipant)
+                                            .setMessage(R.string.userinthisgroup)
+                                            .setPositiveButton(R.string.ADD, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     //add user
                                                     addParticipant(modelUser);
                                                 }
                                             })
-                                            .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                            .setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     dialogInterface.dismiss();
@@ -211,7 +211,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                     @Override
                     public void onSuccess(Void aVoid) {
                         //added successfully
-                        Toast.makeText(context, "Added Successfully...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.AddedSuccessfully, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -233,7 +233,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                     @Override
                     public void onSuccess(Void aVoid) {
                         //made admin
-                        Toast.makeText(context, "The User is now admin...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.isnowadmin, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -252,7 +252,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Removed successfully...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.Removedsuccessfully, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -275,7 +275,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                     @Override
                     public void onSuccess(Void aVoid) {
                         //made admin
-                        Toast.makeText(context, "The User is no longer admin...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.nolongeradmin, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

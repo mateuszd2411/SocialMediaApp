@@ -95,8 +95,38 @@
     <string name="PermissionMessageCameraStorage"><![CDATA[Camera & Storage both permissions are necessary]]></string>
     <string name="PermissionMessageStorage">Storage permissions is necessary</string>
     <string name="Successful">Successful</string>
+
+    <!--    Adapters-->
     <string name="receivepostnotifications">You will receive post notifications</string>
     <string name="Subscribefailed">Subscribe failed</string>
     <string name="postNotificationsMsg">You will not receive post notifications</string>
+    <string name="Delete">Delete</string>
+    <string name="deletethismessage">Are you sure to delete this message?</string>
+    <string name="No">No</string>
+    <string name="Seen">Seen</string>
+    <string name="Delivered">Delivered</string>
+    <string name="messagedeleted">message deleted...</string>
+    <string name="deletedonlyyour">You can deleted only your messages...</string>
+    <string name="deletethiscomment">Are you sure to delete this comment?</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Cantdeleteother">Can\'t delete other\'s comment...</string>
+    <string name="deletethisnotification">Are you sure to delete this notification?</string>
+    <string name="Notificationdeleted">Notification deleted...</string>
+    <string name="ChooseOption">Choose Option</string>
+    <string name="RemoveAdmin">Remove Admin</string>
+    <string name="RemoveUser">Remove User</string>
+    <string name="MakeAdmin">Make Admin</string>
+    <string name="CreatorofGroup">Creator of Group...</string>
+    <string name="AddParticipant">Add Participant</string>
+    <string name="userinthisgroup">Add this user in this group?</string>
+    <string name="ADD">ADD</string>
+    <string name="AddedSuccessfully">Added Successfully...</string>
+    <string name="isnowadmin">The User is now admin...</string>
+    <string name="Removedsuccessfully">Removed successfully...</string>
+    <string name="nolongeradmin">The User is no longer admin...</string>
+    <string name="Youreblockedby">You\'re blocked by that user, can\'t send message...</string>
+    <string name="BlockedSuccessfully">Blocked Successfully...</string>
+    <string name="Failed">\"Failed: \"</string>
+    <string name="UnblockedSuccessfully">Unblocked Successfully...</string>
 
 </resources>

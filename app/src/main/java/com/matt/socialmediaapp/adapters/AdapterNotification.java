@@ -128,9 +128,9 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
             public boolean onLongClick(View view) {
                 //show confirmation dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Delete");
-                builder.setMessage("Are you sure to delete this notification?");
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.Delete);
+                builder.setMessage(R.string.deletethisnotification);
+                builder.setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //delete
@@ -140,7 +140,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
                                 .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(context, "Notification deleted...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.Notificationdeleted, Toast.LENGTH_SHORT).show();
                             }
                         })
                                 .addOnFailureListener(new OnFailureListener() {
@@ -151,7 +151,7 @@ public class AdapterNotification extends RecyclerView.Adapter<AdapterNotificatio
                                 });
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //cancel

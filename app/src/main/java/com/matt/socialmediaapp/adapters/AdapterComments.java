@@ -85,16 +85,16 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                     //my comment
                     //show delete dialog
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
-                    builder.setTitle("Delete");
-                    builder.setMessage("Are you sure to delete this comment?");
-                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    builder.setTitle(R.string.Delete);
+                    builder.setMessage(R.string.deletethiscomment);
+                    builder.setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //delete comment
                             deleteComment(cid);
                         }
                     });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             //dialog dismiss
@@ -105,7 +105,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                     builder.create().show();
                 } else {
                     //not my comment
-                    Toast.makeText(context, "Can't delete other's comment...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.Cantdeleteother, Toast.LENGTH_SHORT).show();
                 }
             }
         });

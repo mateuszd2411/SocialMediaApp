@@ -136,7 +136,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             if (ds.exists()) {
-                                Toast.makeText(context, "You're blocked by that user, can't send message...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.Youreblockedby, Toast.LENGTH_SHORT).show();
                                 //blocked don't proceed further
                                 return;
                             }
@@ -191,14 +191,14 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                     @Override
                     public void onSuccess(Void aVoid) {
                         //blocked successfully
-                        Toast.makeText(context, "Blocked Successfully...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.BlockedSuccessfully, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //failed
-                        Toast.makeText(context, "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, context.getString(R.string.Failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -219,13 +219,13 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 //unblocked user successfully
-                                                Toast.makeText(context, "Unblocked Successfully...", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, R.string.UnblockedSuccessfully, Toast.LENGTH_SHORT).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, context.getString(R.string.Failed), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }

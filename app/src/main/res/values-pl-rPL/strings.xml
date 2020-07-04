@@ -99,5 +99,34 @@
     <string name="receivepostnotifications">Będziesz otrzymywał powaidomienia</string>
     <string name="Subscribefailed">Coś poszło nie tak…</string>
     <string name="postNotificationsMsg">Nie będziesz otrzymywał powaidomień</string>
+    <string name="Delete">Usuń</string>
+    <string name="deletethismessage">Czy na pewno chcesz usunąć tę wiadomość?</string>
+    <string name="No">Nie</string>
+    <string name="Seen">Wyświetlono</string>
+    <string name="Delivered">Dostarczono</string>
+    <string name="messagedeleted">usuwanie wiadomości…</string>
+    <string name="deletedonlyyour">możesz usunąć tylko swoją wiadomość…</string>
+    <string name="deletethiscomment">Jesteś pewien, że chcesz usunąć ten komentarz?</string>
+    <string name="Cancel">Anuluj</string>
+    <string name="Cantdeleteother">Nie możesz usuwać komentarzy innych urzytkowników…</string>
+    <string name="deletethisnotification">Are you sure to delete this notification?</string>
+    <string name="Notificationdeleted">Powiadomienia zostały odwołane…</string>
+    <string name="ChooseOption">Wybierz</string>
+    <string name="RemoveAdmin">Usuń Admina</string>
+    <string name="RemoveUser">Usuń Urzytkownika</string>
+    <string name="MakeAdmin">Utwórz Admina</string>
+    <string name="CreatorofGroup">Założyciel Grupy…</string>
+    <string name="AddParticipant">Dodaj Członka</string>
+    <string name="userinthisgroup">Dodać tego urzytkownika?</string>
+    <string name="ADD">DODAJ</string>
+    <string name="AddedSuccessfully">Dodano Prawidłowo…</string>
+    <string name="isnowadmin">Ten urzytkownik jest teraz Adminem…</string>
+    <string name="Removedsuccessfully">Usunięto…</string>
+    <string name="nolongeradmin">Ten Urzytkownik nie jest już Adminem…</string>
+    <string name="Youreblockedby">Ten Urzytkownik Cię zablokował…</string>
+    <string name="BlockedSuccessfully">Zablokowano…</string>
+    <string name="Failed">\"Failed: \"</string>
+    <string name="UnblockedSuccessfully">Odblokowano…</string>
+    <!--    -->
 
 </resources>

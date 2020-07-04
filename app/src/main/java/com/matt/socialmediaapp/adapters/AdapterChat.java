@@ -1,5 +1,6 @@
 package com.matt.socialmediaapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -61,6 +62,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         //get data
@@ -102,17 +104,17 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
             public void onClick(View view) {
                 //show delete message confirm dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Delete");
-                builder.setMessage("Are you sure to delete this message?");
+                builder.setTitle(R.string.Delete);
+                builder.setMessage(R.string.deletethismessage);
                 //delete button
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.Delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         deleteMessage(position);
                     }
                 });
                 //cancel delete button
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //dismiss dialog
@@ -127,9 +129,9 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
         //set seen/delivered status of message
         if (position == chatList.size() - 1) {
             if (chatList.get(position).isSeen()) {
-                holder.isSeenTv.setText("Seen");
+                holder.isSeenTv.setText(R.string.Seen);
             } else {
-                holder.isSeenTv.setText("Delivered");
+                holder.isSeenTv.setText(R.string.Delivered);
             }
         } else {
             holder.isSeenTv.setVisibility(View.GONE);
@@ -170,9 +172,9 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
                         hashMap.put("message", "This message was deleted...");
                         ds.getRef().updateChildren(hashMap);
 
-                        Toast.makeText(context, "message deleted...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.messagedeleted, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "You can deleted only your messages...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.deletedonlyyour, Toast.LENGTH_SHORT).show();
                     }
 
                 }
