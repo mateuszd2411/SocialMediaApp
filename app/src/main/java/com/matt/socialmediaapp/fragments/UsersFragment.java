@@ -94,9 +94,9 @@ public class UsersFragment extends Fragment {
                     ModelUser modelUser = ds.getValue(ModelUser.class);
 
 //                    //get all users except currently signed in user
-//                    if (!modelUser.getUid().equals(fUser.getUid())) {
-//                        userList.add(modelUser);
-//                    }
+                    if (!modelUser.getUid().equals(fUser.getUid())) {
+                        userList.add(modelUser);
+                    }
 
                     //adapter
                     adapterUsers = new AdapterUsers(getActivity(), userList);
@@ -133,14 +133,14 @@ public class UsersFragment extends Fragment {
                      */
 
                     //get all search users except currently signed in user
-//                    if (!modelUser.getUid().equals(fUser.getUid())) {
-//
-//                        if (modelUser.getName().toLowerCase().contains(query.toLowerCase()) ||
-//                                modelUser.getEmail().toLowerCase().contains(query.toLowerCase())) {
-//                            userList.add(modelUser);
-//                        }
-//
-//                    }
+                    if (!modelUser.getUid().equals(fUser.getUid())) {
+
+                        if (modelUser.getName().toLowerCase().contains(query.toLowerCase()) ||
+                                modelUser.getEmail().toLowerCase().contains(query.toLowerCase())) {
+                            userList.add(modelUser);
+                        }
+
+                    }
 
                     //adapter
                     adapterUsers = new AdapterUsers(getActivity(), userList);
