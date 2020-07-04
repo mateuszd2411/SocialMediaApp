@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId = "activitymain"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortlabel1"
+        android:shortcutLongLabel="@string/longlabel1"
+        android:shortcutDisabledMessage="@string/disablemessage1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.matt.socialmediaapp"
+            android:targetClass="com.matt.socialmediaapp.DashboardActivity">
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId = "activitysecond"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher_round"
+        android:shortcutShortLabel="@string/shortlabel2"
+        android:shortcutLongLabel="@string/longlabel2"
+        android:shortcutDisabledMessage="@string/disablemessage2">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.matt.socialmediaapp"
+            android:targetClass="com.matt.socialmediaapp.AddPostActivity">
+        </intent>
+    </shortcut>
+
+</shortcuts>

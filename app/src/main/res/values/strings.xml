@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">SocialMediaApp</string>
 
+    <string name="shortlabel1">MainActivity</string>
+    <string name="longlabel1">Open MainActivity</string>
+    <string name="disablemessage1">Disabled</string>
+
+    <string name="shortlabel2">SecondActivity</string>
+    <string name="longlabel2">Open SecondActivity</string>
+    <string name="disablemessage2">Disabled</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="facebook_app_id">908987286286511</string>
